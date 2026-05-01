@@ -1,8 +1,8 @@
-import { router } from '@inertiajs/react';
-import { DragEndEvent } from '@dnd-kit/core';
+import type { DragEndEvent } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
+import { router } from '@inertiajs/react';
 import { useState } from 'react';
-import type { Board, BoardColumn, Task } from '@/types';
+import type { Board, BoardColumn } from '@/types';
 
 export function useBoardDragAndDrop(initialBoard: Board) {
     const [board, setBoard] = useState(initialBoard);
@@ -30,7 +30,9 @@ export function useBoardDragAndDrop(initialBoard: Board) {
         // Determine target column — over could be a column id or a task id
         const targetColumn =
             board.columns?.find((col) => col.id === overId) ??
-            board.columns?.find((col) => col.tasks?.some((t) => t.id === overId));
+            board.columns?.find((col) =>
+                col.tasks?.some((t) => t.id === overId),
+            );
 
         if (!targetColumn) {
             return;
@@ -46,18 +48,31 @@ export function useBoardDragAndDrop(initialBoard: Board) {
                     const tasks = col.tasks ?? [];
                     const oldIndex = tasks.findIndex((t) => t.id === activeId);
                     const newIndex = tasks.findIndex((t) => t.id === overId);
-                    return { ...col, tasks: arrayMove(tasks, oldIndex, newIndex) };
+
+                    return {
+                        ...col,
+                        tasks: arrayMove(tasks, oldIndex, newIndex),
+                    };
                 }
 
                 if (col.id === sourceColumn.id) {
-                    return { ...col, tasks: (col.tasks ?? []).filter((t) => t.id !== activeId) };
+                    return {
+                        ...col,
+                        tasks: (col.tasks ?? []).filter(
+                            (t) => t.id !== activeId,
+                        ),
+                    };
                 }
 
                 if (col.id === targetColumn.id) {
                     const tasks = [...(col.tasks ?? [])];
                     const overIndex = tasks.findIndex((t) => t.id === overId);
                     const insertAt = overIndex >= 0 ? overIndex : tasks.length;
-                    tasks.splice(insertAt, 0, { ...task, board_column_id: col.id });
+                    tasks.splice(insertAt, 0, {
+                        ...task,
+                        board_column_id: col.id,
+                    });
+
                     return { ...col, tasks };
                 }
 
@@ -73,7 +88,8 @@ export function useBoardDragAndDrop(initialBoard: Board) {
             {
                 board_column_id: targetColumn.id,
                 position: isSameColumn
-                    ? (targetColumn.tasks?.findIndex((t) => t.id === overId) ?? 0)
+                    ? (targetColumn.tasks?.findIndex((t) => t.id === overId) ??
+                      0)
                     : (targetColumn.tasks?.length ?? 0),
             },
             { preserveScroll: true, preserveState: true },

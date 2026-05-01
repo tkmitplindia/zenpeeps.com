@@ -45,7 +45,7 @@ class ProjectController extends Controller
         $this->authorize('create', Project::class);
 
         return Inertia::render('projects/create', [
-            'plans' => array_map(fn(Plan $p) => $p->value, Plan::cases()),
+            'plans' => array_map(fn (Plan $p) => $p->value, Plan::cases()),
         ]);
     }
 
@@ -78,7 +78,7 @@ class ProjectController extends Controller
         return Inertia::render('settings/projects', [
             'project' => $action->handle($project),
             'members' => $project->members()->orderBy('users.name')->get(),
-            'roles' => array_map(fn(ProjectRole $r) => $r->value, ProjectRole::cases()),
+            'roles' => array_map(fn (ProjectRole $r) => $r->value, ProjectRole::cases()),
         ]);
     }
 
