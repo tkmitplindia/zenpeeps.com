@@ -45,11 +45,11 @@
 | 38 | Build the kanban view                                             | DONE     | 5f2160e    | @dnd-kit drag-and-drop with optimistic updates              |
 | —  | UI polish & component modularisation (Phase 5)                   | DONE     | 0421d52    | Design alignment; split all board pages into components; ListInput, Fallback, BoardDeleteDialog, date-fns relative time, pagination |
 | 39 | Create `Task` model and migration                                 | DONE     | 5f2160e    |                                     |
-| 40 | Create `TaskItem` model and migration                             | TODO     | -          | Deferred to Phase 6                                         |
-| 41 | Create `Label` model and migration                                | TODO     | -          | Deferred to Phase 6                                         |
+| 40 | Create `TaskItem` model and migration                             | DONE     | 9ea135f    | task_items with uuid pk, HasUuid, items() + completion accessor on Task |
+| 41 | Create `Label` model and migration                                | DONE     | 9657cf4    | labels + task_label pivot; HasUuid; board/tasks relations   |
 | 42 | Create `task_assignees` pivot table                               | DONE     | 5f2160e    |                                     |
-| 43 | Build Task actions                                                | TODO     | -          |                                     |
-| 44 | Build Task routes and the task detail page `pages/tasks/show.t... | TODO     | -          |                                     |
+| 43 | Build Task actions                                                | DONE     | d3aabfb    | 12 actions: CRUD, move, items, timer; tasks table extended with priority/estimate/timer columns |
+| 44 | Build Task routes and the task detail page `pages/tasks/show.t... | DONE     | 6bf6ca4    | Full task detail page matching design; sidebar with timer, prev/next nav; 8 tests pass |
 | 45 | Create `Chatroom` model and migration                             | TODO     | -          |                                     |
 | 46 | Hook chatroom auto-creation                                       | TODO     | -          |                                     |
 | 47 | Create `Message` model and migration                              | TODO     | -          |                                     |
