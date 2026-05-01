@@ -18,6 +18,23 @@ export type BoardColumn = {
     tasks?: Task[];
 };
 
+export type TaskItem = {
+    id: string;
+    task_id: string;
+    text: string;
+    done: boolean;
+    position: number;
+    created_at: string;
+    updated_at: string;
+};
+
+export type Label = {
+    id: string;
+    board_id: string;
+    name: string;
+    color: string;
+};
+
 export type Task = {
     id: string;
     board_column_id: string;
@@ -35,6 +52,9 @@ export type Task = {
     created_at: string;
     updated_at: string;
     assignees?: User[];
+    items?: TaskItem[];
+    labels?: Label[];
+    completion?: { done: number; total: number };
 };
 
 export type Board = {
