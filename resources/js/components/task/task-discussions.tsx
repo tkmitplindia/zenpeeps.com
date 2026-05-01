@@ -3,12 +3,10 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import type { Task } from '@/types';
 
-type Props = { task: Task };
-
-// Phase 7 wires real chatroom — stub composer for now
-export function TaskDiscussions({ task: _ }: Props) {
+export function TaskDiscussions({ task }: { task: Task }) {
     return (
         <section>
+            <span className="sr-only">Discussions for {task.title}</span>
             <h2 className="mb-3 text-sm font-semibold">Discussions</h2>
 
             <div className="rounded-xl border bg-card">
@@ -18,7 +16,12 @@ export function TaskDiscussions({ task: _ }: Props) {
                     disabled
                 />
                 <div className="flex items-center gap-0.5 border-t px-2 py-1.5">
-                    <Button variant="ghost" size="sm" className="h-7 gap-1.5 text-xs text-muted-foreground" disabled>
+                    <Button
+                        variant="ghost"
+                        size="sm"
+                        className="h-7 gap-1.5 text-xs text-muted-foreground"
+                        disabled
+                    >
                         <Sparkles className="size-3.5" />
                         Ask AI
                     </Button>

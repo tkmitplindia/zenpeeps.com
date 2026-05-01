@@ -14,19 +14,27 @@ export default function TaskShow({ task, previousTask, nextTask }: Props) {
     return (
         <>
             <Head title={task.title} />
-            <TaskEditForm task={task} previousTask={previousTask} nextTask={nextTask} />
+            <TaskEditForm
+                task={task}
+                previousTask={previousTask}
+                nextTask={nextTask}
+            />
         </>
     );
 }
 
 TaskShow.layout = (props: Props) => {
     const board = props.task?.board as Board | undefined;
+
     return [
         AppLayout,
         {
             breadcrumbs: [
                 { title: 'Boards', href: showBoard.url(board?.id ?? '') },
-                { title: board?.name ?? 'Board', href: showBoard.url(board?.id ?? '') },
+                {
+                    title: board?.name ?? 'Board',
+                    href: showBoard.url(board?.id ?? ''),
+                },
                 { title: props.task?.title ?? 'Task' },
             ],
         },

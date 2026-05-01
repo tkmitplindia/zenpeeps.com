@@ -48,17 +48,20 @@ export function TaskCard({ task, isDragging = false }: Props) {
             </div>
 
             <div className="flex min-w-0 flex-1 flex-col gap-2.5">
-                <p className="font-medium leading-snug">{task.title}</p>
+                <p className="leading-snug font-medium">{task.title}</p>
 
                 {(task.due_date || task.assignees?.length) && (
                     <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
                         {task.due_date && (
                             <span className="flex items-center gap-1">
                                 <CalendarDays className="size-3" />
-                                {new Date(task.due_date).toLocaleDateString('en-US', {
-                                    day: '2-digit',
-                                    month: 'short',
-                                })}
+                                {new Date(task.due_date).toLocaleDateString(
+                                    'en-US',
+                                    {
+                                        day: '2-digit',
+                                        month: 'short',
+                                    },
+                                )}
                             </span>
                         )}
                         {task.assignees && task.assignees.length > 0 && (
@@ -69,7 +72,11 @@ export function TaskCard({ task, isDragging = false }: Props) {
                                         className="flex size-5 items-center justify-center rounded-full border-2 border-card bg-primary text-[9px] font-semibold text-primary-foreground"
                                         title={a.name}
                                     >
-                                        {a.name.split(' ').map((n: string) => n[0]).join('').slice(0, 2)}
+                                        {a.name
+                                            .split(' ')
+                                            .map((n: string) => n[0])
+                                            .join('')
+                                            .slice(0, 2)}
                                     </div>
                                 ))}
                             </div>

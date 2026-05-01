@@ -1,8 +1,8 @@
 import { Form } from '@inertiajs/react';
 import { useState } from 'react';
+import { store } from '@/actions/App/Http/Controllers/TaskController';
 import { TaskCreateMain } from '@/components/task/task-create-main';
 import { TaskCreateSidebar } from '@/components/task/task-create-sidebar';
-import { store } from '@/actions/App/Http/Controllers/TaskController';
 import type { Board, BoardColumn } from '@/types';
 import type { User } from '@/types/auth';
 

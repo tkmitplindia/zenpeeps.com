@@ -1,57 +1,59 @@
 import { router } from '@inertiajs/react';
+import { differenceInSeconds } from 'date-fns';
 import { Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import {
+    startTimer,
+    stopTimer,
+} from '@/actions/App/Http/Controllers/TaskController';
 import { Button } from '@/components/ui/button';
 import { Progress } from '@/components/ui/progress';
-import { startTimer, stopTimer } from '@/actions/App/Http/Controllers/TaskController';
 import type { Task } from '@/types';
-
-type Props = {
-    task: Task;
-};
 
 function formatSeconds(seconds: number): string {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
+
     if (h > 0) {
         return `${h}h ${m}m`;
     }
+
     return `${m}m`;
 }
 
-export function TaskTimeTracker({ task }: Props) {
+export function TaskTimeTracker({ task }: { task: Task }) {
     const isRunning = task.time_tracker_started_at !== null;
 
-    const [liveElapsed, setLiveElapsed] = useState<number>(() => {
-        if (isRunning && task.time_tracker_started_at) {
-            const startedAt = new Date(task.time_tracker_started_at).getTime();
-            return task.elapsed_seconds + Math.floor((Date.now() - startedAt) / 1000);
-        }
-        return task.elapsed_seconds;
-    });
+    const [, setTick] = useState(0);
 
     useEffect(() => {
         if (!isRunning) {
-            setLiveElapsed(task.elapsed_seconds);
             return;
         }
 
-        const interval = setInterval(() => {
-            if (task.time_tracker_started_at) {
-                const startedAt = new Date(task.time_tracker_started_at).getTime();
-                setLiveElapsed(
-                    task.elapsed_seconds + Math.floor((Date.now() - startedAt) / 1000),
-                );
-            }
-        }, 1000);
+        const interval = setInterval(() => setTick((t) => t + 1), 1000);
 
         return () => clearInterval(interval);
-    }, [isRunning, task.elapsed_seconds, task.time_tracker_started_at]);
+    }, [isRunning]);
 
-    const estimateSeconds = task.estimate_minutes ? task.estimate_minutes * 60 : null;
+    const displayElapsed =
+        isRunning && task.time_tracker_started_at
+            ? task.elapsed_seconds +
+              differenceInSeconds(
+                  new Date(),
+                  new Date(task.time_tracker_started_at),
+              )
+            : task.elapsed_seconds;
+
+    const estimateSeconds = task.estimate_minutes
+        ? task.estimate_minutes * 60
+        : null;
     const pct =
         estimateSeconds && estimateSeconds > 0
-            ? Math.min(100, Math.round((liveElapsed / estimateSeconds) * 100))
+            ? Math.min(
+                  100,
+                  Math.round((displayElapsed / estimateSeconds) * 100),
+              )
             : 0;
 
     function handleStart() {
@@ -64,21 +66,26 @@ export function TaskTimeTracker({ task }: Props) {
 
     return (
         <div className="space-y-2">
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+            <span className="sr-only">Time tracker for {task.title}</span>
+            <p className="text-xs font-semibold tracking-wide text-muted-foreground uppercase">
                 Time Tracker
             </p>
             <div className="flex items-center justify-between gap-2">
                 <div className="flex items-center gap-1.5 text-sm">
                     <Clock className="size-4 text-muted-foreground" />
                     <span>
-                        {formatSeconds(liveElapsed)} elapsed
+                        {formatSeconds(displayElapsed)} elapsed
                         {estimateSeconds
                             ? ` of estimated ${formatSeconds(estimateSeconds)}`
                             : ''}
                     </span>
                 </div>
                 {isRunning ? (
-                    <Button size="sm" variant="destructive" onClick={handleStop}>
+                    <Button
+                        size="sm"
+                        variant="destructive"
+                        onClick={handleStop}
+                    >
                         End Task
                     </Button>
                 ) : (

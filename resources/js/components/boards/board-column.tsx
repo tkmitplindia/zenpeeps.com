@@ -1,9 +1,12 @@
 import { useDroppable } from '@dnd-kit/core';
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import {
+    SortableContext,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { router } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
-import { TaskCard } from '@/components/boards/task-card';
 import { create } from '@/actions/App/Http/Controllers/TaskController';
+import { TaskCard } from '@/components/boards/task-card';
 import type { BoardColumn as BoardColumnType } from '@/types';
 
 type Props = {
@@ -30,13 +33,23 @@ export function BoardColumn({ column }: Props) {
                 <button
                     className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                     aria-label="Add task"
-                    onClick={() => router.visit(create.url(column.board_id, { query: { column_id: column.id } }))}
+                    onClick={() =>
+                        router.visit(
+                            create.url(column.board_id, {
+                                query: { column_id: column.id },
+                            }),
+                        )
+                    }
                 >
                     <Plus className="size-3.5" />
                 </button>
             </div>
 
-            <SortableContext items={taskIds} strategy={verticalListSortingStrategy} id={column.id}>
+            <SortableContext
+                items={taskIds}
+                strategy={verticalListSortingStrategy}
+                id={column.id}
+            >
                 <div
                     ref={setNodeRef}
                     className="flex min-h-24 flex-col gap-2 rounded-xl bg-muted/40 p-2"

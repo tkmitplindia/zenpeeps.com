@@ -37,6 +37,7 @@ export type Label = {
 
 export type Task = {
     id: string;
+    board: Board;
     board_column_id: string;
     board_id: string;
     project_id: string;

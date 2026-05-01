@@ -1,7 +1,12 @@
 import { router } from '@inertiajs/react';
-import { CheckCircle2, ChevronLeft, ChevronRight, MoreHorizontal } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import {
+    CheckCircle2,
+    ChevronLeft,
+    ChevronRight,
+    MoreHorizontal,
+} from 'lucide-react';
 import { show, update } from '@/actions/App/Http/Controllers/TaskController';
+import { Button } from '@/components/ui/button';
 import type { Task } from '@/types';
 
 type Props = {
@@ -14,7 +19,11 @@ export function TaskHeader({ task, previousTask, nextTask }: Props) {
     function handleComplete() {
         router.patch(
             update(task.id).url,
-            { completed_at: task.completed_at ? null : new Date().toISOString() },
+            {
+                completed_at: task.completed_at
+                    ? null
+                    : new Date().toISOString(),
+            },
             { preserveScroll: true },
         );
     }
@@ -22,7 +31,9 @@ export function TaskHeader({ task, previousTask, nextTask }: Props) {
     return (
         <div className="mb-5 flex items-start justify-between gap-4">
             <div className="min-w-0">
-                <h1 className="text-2xl font-bold leading-tight">{task.title}</h1>
+                <h1 className="text-2xl leading-tight font-bold">
+                    {task.title}
+                </h1>
                 <p className="mt-0.5 text-xs font-medium tracking-widest text-muted-foreground">
                     TASK #{task.id.slice(0, 8).toUpperCase()}
                 </p>
@@ -33,7 +44,9 @@ export function TaskHeader({ task, previousTask, nextTask }: Props) {
                     size="icon"
                     className="size-8"
                     onClick={handleComplete}
-                    title={task.completed_at ? 'Mark incomplete' : 'Mark complete'}
+                    title={
+                        task.completed_at ? 'Mark incomplete' : 'Mark complete'
+                    }
                 >
                     <CheckCircle2 className="size-4" />
                 </Button>

@@ -11,11 +11,19 @@ type Props = {
     members: User[];
 };
 
-export default function TaskCreate({ board, selectedColumnId, members }: Props) {
+export default function TaskCreate({
+    board,
+    selectedColumnId,
+    members,
+}: Props) {
     return (
         <>
             <Head title="New Task" />
-            <TaskCreateForm board={board} selectedColumnId={selectedColumnId} members={members} />
+            <TaskCreateForm
+                board={board}
+                selectedColumnId={selectedColumnId}
+                members={members}
+            />
         </>
     );
 }
@@ -25,7 +33,10 @@ TaskCreate.layout = (props: { board: Board }) => [
     {
         breadcrumbs: [
             { title: 'Boards', href: boardsIndex.url() },
-            { title: props.board?.name ?? 'Board', href: boardShow.url({ board: props.board?.id ?? '' }) },
+            {
+                title: props.board?.name ?? 'Board',
+                href: boardShow.url({ board: props.board?.id ?? '' }),
+            },
             { title: 'New Task' },
         ],
     },

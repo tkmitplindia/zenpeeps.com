@@ -1,10 +1,14 @@
 import { router } from '@inertiajs/react';
 import { Plus, Trash2 } from 'lucide-react';
 import { useState } from 'react';
+import {
+    destroyItem,
+    storeItem,
+    toggleItem,
+} from '@/actions/App/Http/Controllers/TaskController';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { destroyItem, storeItem, toggleItem } from '@/actions/App/Http/Controllers/TaskController';
 import type { Task, TaskItem } from '@/types';
 
 type Props = { task: Task; items: TaskItem[] };
@@ -18,19 +22,35 @@ export function TaskChecklist({ task, items }: Props) {
     const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
     function handleToggle(item: TaskItem) {
-        router.patch(toggleItem({ task: task.id, item: item.id }).url, {}, { preserveScroll: true });
+        router.patch(
+            toggleItem({ task: task.id, item: item.id }).url,
+            {},
+            { preserveScroll: true },
+        );
     }
 
     function handleAdd() {
-        if (!newText.trim()) return;
-        router.post(storeItem(task.id).url, { text: newText.trim() }, {
-            preserveScroll: true,
-            onSuccess: () => { setNewText(''); setAdding(false); },
-        });
+        if (!newText.trim()) {
+return;
+}
+
+        router.post(
+            storeItem(task.id).url,
+            { text: newText.trim() },
+            {
+                preserveScroll: true,
+                onSuccess: () => {
+                    setNewText('');
+                    setAdding(false);
+                },
+            },
+        );
     }
 
     function handleRemove(item: TaskItem) {
-        router.delete(destroyItem({ task: task.id, item: item.id }).url, { preserveScroll: true });
+        router.delete(destroyItem({ task: task.id, item: item.id }).url, {
+            preserveScroll: true,
+        });
     }
 
     return (
@@ -90,13 +110,28 @@ export function TaskChecklist({ task, items }: Props) {
                         value={newText}
                         onChange={(e) => setNewText(e.target.value)}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter') handleAdd();
-                            if (e.key === 'Escape') { setAdding(false); setNewText(''); }
+                            if (e.key === 'Enter') {
+handleAdd();
+}
+
+                            if (e.key === 'Escape') {
+                                setAdding(false);
+                                setNewText('');
+                            }
                         }}
                         className="h-8 text-sm"
                     />
-                    <Button size="sm" onClick={handleAdd}>Add</Button>
-                    <Button size="sm" variant="ghost" onClick={() => { setAdding(false); setNewText(''); }}>
+                    <Button size="sm" onClick={handleAdd}>
+                        Add
+                    </Button>
+                    <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => {
+                            setAdding(false);
+                            setNewText('');
+                        }}
+                    >
                         Cancel
                     </Button>
                 </div>

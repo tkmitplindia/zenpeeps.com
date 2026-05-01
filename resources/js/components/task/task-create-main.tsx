@@ -1,5 +1,13 @@
 import { router } from '@inertiajs/react';
-import { Bold, Italic, List, ListOrdered, Pilcrow, Sparkles, Underline } from 'lucide-react';
+import {
+    Bold,
+    Italic,
+    List,
+    ListOrdered,
+    Pilcrow,
+    Sparkles,
+    Underline,
+} from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -33,7 +41,11 @@ export function TaskCreateMain({ board, errors, processing }: Props) {
                     required
                     className="h-auto border-0 p-0 text-2xl font-bold shadow-none focus-visible:ring-0"
                 />
-                {errors.title && <p className="mt-1 text-sm text-destructive">{errors.title}</p>}
+                {errors.title && (
+                    <p className="mt-1 text-sm text-destructive">
+                        {errors.title}
+                    </p>
+                )}
             </div>
 
             {/* Description */}
@@ -47,12 +59,24 @@ export function TaskCreateMain({ board, errors, processing }: Props) {
                 </div>
                 <div className="flex items-center gap-0.5 border-t px-2 py-1.5">
                     {TOOLBAR_BUTTONS.map(({ icon: Icon, label }) => (
-                        <Button key={label} type="button" variant="ghost" size="icon" className="size-7 text-muted-foreground" title={label}>
+                        <Button
+                            key={label}
+                            type="button"
+                            variant="ghost"
+                            size="icon"
+                            className="size-7 text-muted-foreground"
+                            title={label}
+                        >
                             <Icon className="size-3.5" />
                         </Button>
                     ))}
                     <div className="ml-auto">
-                        <Button type="button" variant="ghost" size="sm" className="h-7 gap-1.5 text-xs text-muted-foreground">
+                        <Button
+                            type="button"
+                            variant="ghost"
+                            size="sm"
+                            className="h-7 gap-1.5 text-xs text-muted-foreground"
+                        >
                             <Sparkles className="size-3.5" />
                             Ask AI
                         </Button>
@@ -62,7 +86,11 @@ export function TaskCreateMain({ board, errors, processing }: Props) {
 
             {/* Actions */}
             <div className="mt-4 flex gap-2">
-                <Button type="button" variant="outline" onClick={() => router.visit(boardShow.url(board.id))}>
+                <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => router.visit(boardShow.url(board.id))}
+                >
                     Cancel
                 </Button>
                 <Button type="submit" disabled={processing}>

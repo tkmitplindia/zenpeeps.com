@@ -1,9 +1,20 @@
 import { router } from '@inertiajs/react';
-import { CalendarDays, ChevronLeft, ChevronRight, Clock, Flag } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { TaskTimeTracker } from '@/components/task/task-time-tracker';
+import {
+    CalendarDays,
+    ChevronLeft,
+    ChevronRight,
+    Clock,
+    Flag,
+} from 'lucide-react';
 import { show, update } from '@/actions/App/Http/Controllers/TaskController';
+import { TaskTimeTracker } from '@/components/task/task-time-tracker';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/select';
 import type { Board, BoardColumn, Task } from '@/types';
 
 type Props = {
@@ -22,12 +33,20 @@ export const PRIORITIES = [
 
 export function SidebarLabel({ children }: { children: React.ReactNode }) {
     return (
-        <p className="mb-1.5 text-xs font-medium text-muted-foreground">{children}</p>
+        <p className="mb-1.5 text-xs font-medium text-muted-foreground">
+            {children}
+        </p>
     );
 }
 
 function Avatar({ name }: { name: string }) {
-    const initials = name.split(' ').map((n) => n[0]).join('').slice(0, 2).toUpperCase();
+    const initials = name
+        .split(' ')
+        .map((n) => n[0])
+        .join('')
+        .slice(0, 2)
+        .toUpperCase();
+
     return (
         <div className="flex size-7 shrink-0 items-center justify-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">
             {initials}
@@ -37,7 +56,8 @@ function Avatar({ name }: { name: string }) {
 
 export function TaskSidebar({ task, board, previousTask, nextTask }: Props) {
     const columns = (board.columns ?? []) as BoardColumn[];
-    const priority = PRIORITIES.find((p) => p.value === task.priority) ?? PRIORITIES[1];
+    const priority =
+        PRIORITIES.find((p) => p.value === task.priority) ?? PRIORITIES[1];
     const estimateHours = task.estimate_minutes
         ? task.estimate_minutes >= 60
             ? `${Math.floor(task.estimate_minutes / 60)}h ${task.estimate_minutes % 60 > 0 ? `${task.estimate_minutes % 60}m` : ''}`.trim()
@@ -53,13 +73,18 @@ export function TaskSidebar({ task, board, previousTask, nextTask }: Props) {
             {/* Column */}
             <div>
                 <SidebarLabel>Column</SidebarLabel>
-                <Select value={task.board_column_id} onValueChange={(v) => patch({ board_column_id: v })}>
+                <Select
+                    value={task.board_column_id}
+                    onValueChange={(v) => patch({ board_column_id: v })}
+                >
                     <SelectTrigger className="h-9">
                         <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
                         {columns.map((col) => (
-                            <SelectItem key={col.id} value={col.id}>{col.name}</SelectItem>
+                            <SelectItem key={col.id} value={col.id}>
+                                {col.name}
+                            </SelectItem>
                         ))}
                     </SelectContent>
                 </Select>
@@ -68,12 +93,21 @@ export function TaskSidebar({ task, board, previousTask, nextTask }: Props) {
             {/* Priority */}
             <div>
                 <SidebarLabel>Priority</SidebarLabel>
-                <Select value={task.priority} onValueChange={(v) => patch({ priority: v })}>
+                <Select
+                    value={task.priority}
+                    onValueChange={(v) => patch({ priority: v })}
+                >
                     <SelectTrigger className="h-9">
                         <SelectValue>
                             <span className="flex items-center gap-2">
-                                <Flag className={`size-3.5 ${priority.color}`} />
-                                <span className={`text-sm font-medium ${priority.color}`}>{priority.label}</span>
+                                <Flag
+                                    className={`size-3.5 ${priority.color}`}
+                                />
+                                <span
+                                    className={`text-sm font-medium ${priority.color}`}
+                                >
+                                    {priority.label}
+                                </span>
                             </span>
                         </SelectValue>
                     </SelectTrigger>
@@ -96,13 +130,19 @@ export function TaskSidebar({ task, board, previousTask, nextTask }: Props) {
                 <div className="flex min-h-9 flex-wrap items-center gap-1.5 rounded-md border px-2 py-1.5">
                     {task.assignees && task.assignees.length > 0 ? (
                         task.assignees.map((a) => (
-                            <div key={a.id} className="flex items-center gap-1.5" title={a.name}>
+                            <div
+                                key={a.id}
+                                className="flex items-center gap-1.5"
+                                title={a.name}
+                            >
                                 <Avatar name={a.name} />
                                 <span className="text-xs">{a.name}</span>
                             </div>
                         ))
                     ) : (
-                        <span className="text-xs text-muted-foreground">Unassigned</span>
+                        <span className="text-xs text-muted-foreground">
+                            Unassigned
+                        </span>
                     )}
                 </div>
             </div>
@@ -122,7 +162,9 @@ export function TaskSidebar({ task, board, previousTask, nextTask }: Props) {
                             </span>
                         ))
                     ) : (
-                        <span className="text-xs text-muted-foreground">Add a tag...</span>
+                        <span className="text-xs text-muted-foreground">
+                            Add a tag...
+                        </span>
                     )}
                 </div>
             </div>
@@ -134,12 +176,15 @@ export function TaskSidebar({ task, board, previousTask, nextTask }: Props) {
                     <CalendarDays className="size-4 shrink-0 text-muted-foreground" />
                     {task.due_date ? (
                         <span>
-                            {new Date(task.due_date).toLocaleDateString('en-US', {
-                                weekday: 'short',
-                                month: 'short',
-                                day: 'numeric',
-                                year: 'numeric',
-                            })}
+                            {new Date(task.due_date).toLocaleDateString(
+                                'en-US',
+                                {
+                                    weekday: 'short',
+                                    month: 'short',
+                                    day: 'numeric',
+                                    year: 'numeric',
+                                },
+                            )}
                         </span>
                     ) : (
                         <span className="text-muted-foreground">Not set</span>
@@ -172,8 +217,12 @@ export function TaskSidebar({ task, board, previousTask, nextTask }: Props) {
                     >
                         <ChevronLeft className="size-3.5 shrink-0 text-muted-foreground" />
                         <span className="truncate text-left">
-                            <span className="block text-[10px] text-muted-foreground">Previous Task</span>
-                            <span className="truncate font-medium">{previousTask.title}</span>
+                            <span className="block text-[10px] text-muted-foreground">
+                                Previous Task
+                            </span>
+                            <span className="truncate font-medium">
+                                {previousTask.title}
+                            </span>
                         </span>
                     </button>
                 ) : (
@@ -185,8 +234,12 @@ export function TaskSidebar({ task, board, previousTask, nextTask }: Props) {
                         className="flex flex-1 items-center justify-end gap-1.5 rounded-md border px-2 py-2 text-xs hover:bg-muted"
                     >
                         <span className="truncate text-right">
-                            <span className="block text-[10px] text-muted-foreground">Next Task</span>
-                            <span className="truncate font-medium">{nextTask.title}</span>
+                            <span className="block text-[10px] text-muted-foreground">
+                                Next Task
+                            </span>
+                            <span className="truncate font-medium">
+                                {nextTask.title}
+                            </span>
                         </span>
                         <ChevronRight className="size-3.5 shrink-0 text-muted-foreground" />
                     </button>

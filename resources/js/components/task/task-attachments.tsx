@@ -2,14 +2,16 @@ import { Paperclip, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import type { Task } from '@/types';
 
-type Props = { task: Task };
-
-// Phase 3 wires real attachments — stub for now
-export function TaskAttachments({ task: _ }: Props) {
+export function TaskAttachments({ task }: { task: Task }) {
     return (
         <section>
+            <h2 className="sr-only">Attachments of task {task.title}</h2>
             <h2 className="mb-3 text-sm font-semibold">Attachments</h2>
-            <Button variant="outline" size="sm" className="gap-2 text-muted-foreground">
+            <Button
+                variant="outline"
+                size="sm"
+                className="gap-2 text-muted-foreground"
+            >
                 <Upload className="size-3.5" />
                 Add attachment
             </Button>
