@@ -6,22 +6,26 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('labels', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('board_id')->constrained()->cascadeOnDelete();
+            $table->string('name');
+            $table->string('color', 7); // hex color e.g. #FF5733
             $table->timestamps();
+        });
+
+        Schema::create('task_label', function (Blueprint $table) {
+            $table->foreignUuid('task_id')->constrained()->cascadeOnDelete();
+            $table->foreignUuid('label_id')->constrained()->cascadeOnDelete();
+            $table->primary(['task_id', 'label_id']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
+        Schema::dropIfExists('task_label');
         Schema::dropIfExists('labels');
     }
 };
