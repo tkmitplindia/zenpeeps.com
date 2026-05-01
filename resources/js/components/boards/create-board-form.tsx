@@ -1,10 +1,13 @@
 import { useForm } from '@inertiajs/react';
-import { TemplatePicker, getDefaultColumns } from '@/components/boards/template-picker';
-import { ListInput } from '@/components/ui/list-input';
+import {
+    TemplatePicker,
+    getDefaultColumns,
+} from '@/components/boards/template-picker';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { ListInput } from '@/components/ui/list-input';
 import { Textarea } from '@/components/ui/textarea';
 import { index, store } from '@/routes/boards';
 import type { BoardTemplate } from '@/types';
@@ -46,7 +49,9 @@ export function CreateBoardForm({ templates }: Props) {
                 <Input
                     id="name"
                     value={data.name}
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) => setData('name', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setData('name', e.target.value)
+                    }
                     placeholder="eg. Sprint 14"
                     autoFocus
                 />
@@ -58,7 +63,9 @@ export function CreateBoardForm({ templates }: Props) {
                 <Textarea
                     id="description"
                     value={data.description}
-                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setData('description', e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+                        setData('description', e.target.value)
+                    }
                     placeholder="eg. Two week sprint focused on UX and accessibility."
                     rows={4}
                 />
@@ -67,7 +74,11 @@ export function CreateBoardForm({ templates }: Props) {
 
             <div className="space-y-2">
                 <Label>Columns</Label>
-                <ListInput value={data.columns} onChange={(columns) => setData('columns', columns)} placeholder="Add a column…" />
+                <ListInput
+                    value={data.columns}
+                    onChange={(columns) => setData('columns', columns)}
+                    placeholder="Add a column…"
+                />
                 <InputError message={errors.columns} />
             </div>
 

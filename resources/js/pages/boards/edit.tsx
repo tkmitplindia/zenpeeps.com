@@ -1,8 +1,8 @@
 import { Head } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import { BoardDeleteDialog } from '@/components/boards/board-delete-dialog';
 import { EditBoardForm } from '@/components/boards/edit-board-form';
 import { Button } from '@/components/ui/button';
+import AppLayout from '@/layouts/app-layout';
 import { index, show } from '@/routes/boards';
 import type { Board } from '@/types';
 
@@ -11,12 +11,14 @@ export default function BoardEdit({ board }: { board: Board }) {
         <>
             <Head title={`Edit · ${board.name}`} />
 
-            <div className="p-6 max-w-2xl">
+            <div className="max-w-2xl p-6">
                 <div className="mb-6 flex items-start justify-between gap-4">
                     <div>
                         <h1 className="text-2xl font-bold">{board.name}</h1>
                         {board.description && (
-                            <p className="text-sm text-muted-foreground">{board.description}</p>
+                            <p className="text-sm text-muted-foreground">
+                                {board.description}
+                            </p>
                         )}
                     </div>
                     <BoardDeleteDialog board={board}>

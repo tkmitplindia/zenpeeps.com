@@ -1,7 +1,7 @@
 import { Head } from '@inertiajs/react';
-import AppLayout from '@/layouts/app-layout';
 import { BoardHeader } from '@/components/boards/board-header';
 import { KanbanBoard } from '@/components/boards/kanban-board';
+import AppLayout from '@/layouts/app-layout';
 import { index } from '@/routes/boards';
 import type { Board } from '@/types';
 

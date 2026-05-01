@@ -19,7 +19,9 @@ export function BoardsEmpty() {
                     <Kanban />
                 </EmptyMedia>
                 <EmptyTitle>No boards yet</EmptyTitle>
-                <EmptyDescription>Create a board to start tracking work for your team.</EmptyDescription>
+                <EmptyDescription>
+                    Create a board to start tracking work for your team.
+                </EmptyDescription>
             </EmptyHeader>
             <EmptyContent>
                 <Button asChild>

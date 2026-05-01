@@ -6,7 +6,11 @@ type Props = {
     children: ReactNode;
 };
 
-export function Fallback({ condition, fallback: FallbackComponent, children }: Props) {
+export function Fallback({
+    condition,
+    fallback: FallbackComponent,
+    children,
+}: Props) {
     if (!condition) {
         return <FallbackComponent />;
     }

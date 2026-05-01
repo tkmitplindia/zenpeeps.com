@@ -34,7 +34,10 @@ export function ProjectRecharges({
                                     name="pack"
                                     value={pack.key}
                                 />
-                                <div id={pack.key} className="flex items-center justify-between rounded-lg border p-4">
+                                <div
+                                    id={pack.key}
+                                    className="flex items-center justify-between rounded-lg border p-4"
+                                >
                                     <div>
                                         <p className="text-sm font-semibold">
                                             {pack.label}

@@ -10,7 +10,7 @@ export function BoardCard({ board }: { board: Board }) {
     return (
         <Link
             href={show.url(board.id as any)}
-            className="flex flex-col gap-4 rounded-xl border bg-card p-5 hover:border-primary/30 hover:shadow-sm transition-all"
+            className="flex flex-col gap-4 rounded-xl border bg-card p-5 transition-all hover:border-primary/30 hover:shadow-sm"
         >
             <div className="flex items-start justify-between gap-2">
                 <div className="flex size-9 items-center justify-center rounded-lg border bg-muted">
@@ -29,9 +29,9 @@ export function BoardCard({ board }: { board: Board }) {
             </div>
 
             <div className="flex-1">
-                <p className="font-semibold leading-snug">{board.name}</p>
+                <p className="leading-snug font-semibold">{board.name}</p>
                 {board.description && (
-                    <p className="mt-1.5 text-sm text-muted-foreground line-clamp-2">
+                    <p className="mt-1.5 line-clamp-2 text-sm text-muted-foreground">
                         {board.description}
                     </p>
                 )}

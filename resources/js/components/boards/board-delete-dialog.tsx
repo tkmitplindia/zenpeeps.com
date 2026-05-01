@@ -1,5 +1,6 @@
 import { router } from '@inertiajs/react';
-import { type ReactNode, useState } from 'react';
+import { useState } from 'react';
+import type { ReactNode } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     Dialog,
@@ -35,7 +36,8 @@ export function BoardDeleteDialog({ board, children }: Props) {
                 <DialogHeader>
                     <DialogTitle>Delete "{board.name}"?</DialogTitle>
                     <DialogDescription>
-                        This will permanently delete the board and all its tasks. This cannot be undone.
+                        This will permanently delete the board and all its
+                        tasks. This cannot be undone.
                     </DialogDescription>
                 </DialogHeader>
                 <DialogFooter>

@@ -15,7 +15,9 @@ export function BoardHeader({ board }: Props) {
             <div>
                 <h1 className="text-2xl font-bold">{board.name}</h1>
                 {board.description && (
-                    <p className="mt-0.5 text-sm text-muted-foreground">{board.description}</p>
+                    <p className="mt-0.5 text-sm text-muted-foreground">
+                        {board.description}
+                    </p>
                 )}
             </div>
             <div className="flex shrink-0 items-center gap-1">
@@ -25,7 +27,11 @@ export function BoardHeader({ board }: Props) {
                     </Link>
                 </Button>
                 <BoardDeleteDialog board={board}>
-                    <Button variant="ghost" size="icon" className="size-8 text-destructive hover:text-destructive">
+                    <Button
+                        variant="ghost"
+                        size="icon"
+                        className="size-8 text-destructive hover:text-destructive"
+                    >
                         <Trash2 className="size-4" />
                     </Button>
                 </BoardDeleteDialog>

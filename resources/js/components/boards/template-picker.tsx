@@ -44,13 +44,15 @@ export function TemplatePicker({ templates, selected, onChange }: Props) {
                     <span
                         className={`inline-flex items-center gap-1.5 rounded-lg border px-3 py-2 text-sm transition-colors ${
                             selected === t
-                                ? 'border-primary bg-primary/5 text-primary font-medium'
+                                ? 'border-primary bg-primary/5 font-medium text-primary'
                                 : 'border-border hover:bg-muted'
                         }`}
                     >
                         <span
                             className={`size-2 rounded-full border ${
-                                selected === t ? 'bg-primary border-primary' : 'border-muted-foreground'
+                                selected === t
+                                    ? 'border-primary bg-primary'
+                                    : 'border-muted-foreground'
                             }`}
                         />
                         {TEMPLATE_LABELS[t]}

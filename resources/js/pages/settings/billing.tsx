@@ -72,15 +72,16 @@ export default function BillingSettings({
                         description="Your active subscription and billing period."
                     />
 
-                    <div className="rounded-lg border p-4 space-y-3">
+                    <div className="space-y-3 rounded-lg border p-4">
                         <div className="flex items-center justify-between">
                             <div className="flex items-center gap-2">
                                 <span className="text-sm font-semibold">
                                     {PLAN_LABELS[project.plan]}
                                 </span>
                                 <Badge variant="secondary">
-                                    {STATUS_LABELS[limits.subscription_status] ??
-                                        limits.subscription_status}
+                                    {STATUS_LABELS[
+                                        limits.subscription_status
+                                    ] ?? limits.subscription_status}
                                 </Badge>
                             </div>
                             <span className="text-sm text-muted-foreground">
@@ -99,7 +100,7 @@ export default function BillingSettings({
                         <div className="grid grid-cols-2 gap-x-6 gap-y-1 text-sm sm:grid-cols-3">
                             <span className="text-muted-foreground">
                                 Boards:{' '}
-                                <span className="text-foreground font-medium">
+                                <span className="font-medium text-foreground">
                                     {planDetails.board_limit === 0
                                         ? 'Unlimited'
                                         : planDetails.board_limit}
@@ -107,7 +108,7 @@ export default function BillingSettings({
                             </span>
                             <span className="text-muted-foreground">
                                 AI tokens:{' '}
-                                <span className="text-foreground font-medium">
+                                <span className="font-medium text-foreground">
                                     {planDetails.ai_tokens_monthly === 0
                                         ? 'Trial only'
                                         : `${(planDetails.ai_tokens_monthly / 1_000_000).toFixed(0)}M/mo`}
@@ -115,8 +116,9 @@ export default function BillingSettings({
                             </span>
                             <span className="text-muted-foreground">
                                 Storage:{' '}
-                                <span className="text-foreground font-medium">
-                                    {planDetails.storage_bytes / 1_000_000_000} GB
+                                <span className="font-medium text-foreground">
+                                    {planDetails.storage_bytes / 1_000_000_000}{' '}
+                                    GB
                                 </span>
                             </span>
                         </div>

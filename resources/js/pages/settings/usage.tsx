@@ -39,7 +39,13 @@ function formatDate(iso: string) {
     });
 }
 
-function UsageRow({ resource, projectId }: { resource: UsageResource; projectId: string }) {
+function UsageRow({
+    resource,
+    projectId,
+}: {
+    resource: UsageResource;
+    projectId: string;
+}) {
     const pct =
         resource.total === 0
             ? 0
@@ -58,14 +64,14 @@ function UsageRow({ resource, projectId }: { resource: UsageResource; projectId:
                     </span>
                     <Link
                         href={`${billing.url(projectId)}#${resource.key}`}
-                        className="text-xs text-primary hover:underline shrink-0"
+                        className="shrink-0 text-xs text-primary hover:underline"
                     >
                         Get more
                     </Link>
                 </div>
             </div>
 
-            <div className="h-2 w-full rounded-full bg-muted overflow-hidden">
+            <div className="h-2 w-full overflow-hidden rounded-full bg-muted">
                 {resource.total > 0 && (
                     <div
                         className="h-full rounded-full bg-primary transition-all"

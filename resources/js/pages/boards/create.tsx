@@ -3,15 +3,21 @@ import { CreateBoardForm } from '@/components/boards/create-board-form';
 import { create, index } from '@/routes/boards';
 import type { BoardTemplate } from '@/types';
 
-export default function BoardCreate({ templates }: { templates: BoardTemplate[] }) {
+export default function BoardCreate({
+    templates,
+}: {
+    templates: BoardTemplate[];
+}) {
     return (
         <>
             <Head title="New Board" />
 
-            <div className="p-6 max-w-2xl">
+            <div className="max-w-2xl p-6">
                 <div className="mb-6">
                     <h1 className="text-2xl font-bold">New Board</h1>
-                    <p className="text-sm text-muted-foreground">Create a new board</p>
+                    <p className="text-sm text-muted-foreground">
+                        Create a new board
+                    </p>
                 </div>
 
                 <CreateBoardForm templates={templates} />

@@ -5,9 +5,8 @@ import {
     closestCorners,
     useSensor,
     useSensors,
-    type DragEndEvent,
-    type DragStartEvent,
 } from '@dnd-kit/core';
+import type { DragEndEvent, DragStartEvent } from '@dnd-kit/core';
 import { useState } from 'react';
 import { BoardColumn } from '@/components/boards/board-column';
 import { TaskCard } from '@/components/boards/task-card';
@@ -28,7 +27,10 @@ export function KanbanBoard({ board: initialBoard }: Props) {
 
     function handleDragStart(event: DragStartEvent) {
         const id = event.active.id as string;
-        const task = board.columns?.flatMap((c) => c.tasks ?? []).find((t) => t.id === id) ?? null;
+        const task =
+            board.columns
+                ?.flatMap((c) => c.tasks ?? [])
+                .find((t) => t.id === id) ?? null;
         setActiveTask(task);
     }
 

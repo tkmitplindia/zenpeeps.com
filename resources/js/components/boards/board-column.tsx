@@ -1,4 +1,7 @@
-import { SortableContext, verticalListSortingStrategy } from '@dnd-kit/sortable';
+import {
+    SortableContext,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { Plus } from 'lucide-react';
 import { TaskCard } from '@/components/boards/task-card';
 import type { BoardColumn as BoardColumnType } from '@/types';
@@ -23,14 +26,18 @@ export function BoardColumn({ column }: Props) {
                     )}
                 </div>
                 <button
-                    className="flex size-6 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground transition-colors"
+                    className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                     aria-label="Add task"
                 >
                     <Plus className="size-3.5" />
                 </button>
             </div>
 
-            <SortableContext items={taskIds} strategy={verticalListSortingStrategy} id={column.id}>
+            <SortableContext
+                items={taskIds}
+                strategy={verticalListSortingStrategy}
+                id={column.id}
+            >
                 <div
                     className="flex min-h-24 flex-col gap-2 rounded-xl bg-muted/40 p-2"
                     data-column-id={column.id}
