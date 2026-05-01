@@ -30,6 +30,22 @@ class TaskController extends Controller
         return Project::findOrFail($request->session()->get('current_project_id'));
     }
 
+    public function create(Request $request, Board $board): InertiaResponse
+    {
+        $this->authorize('create', Task::class);
+
+        $project = $this->currentProject($request);
+        $board->load('columns');
+
+        $members = $project->members()->get(['users.id', 'users.name', 'users.email']);
+
+        return Inertia::render('tasks/create', [
+            'board' => $board,
+            'selectedColumnId' => $request->query('column_id'),
+            'members' => $members,
+        ]);
+    }
+
     public function show(Request $request, Task $task, ShowTaskAction $action): InertiaResponse
     {
         $this->authorize('view', $task);

@@ -23,6 +23,7 @@ Route::middleware(['auth'])->group(function () {
         Route::patch('boards/{board}/tasks/{task}/move', [BoardController::class, 'moveTask'])->name('boards.tasks.move');
 
         // Tasks
+        Route::get('boards/{board}/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
         Route::get('tasks/{task}', [TaskController::class, 'show'])->name('tasks.show');
         Route::post('tasks', [TaskController::class, 'store'])->name('tasks.store');
         Route::patch('tasks/{task}', [TaskController::class, 'update'])->name('tasks.update');

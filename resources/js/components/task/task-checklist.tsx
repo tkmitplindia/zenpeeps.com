@@ -4,14 +4,10 @@ import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
-import { Progress } from '@/components/ui/progress';
 import { destroyItem, storeItem, toggleItem } from '@/actions/App/Http/Controllers/TaskController';
 import type { Task, TaskItem } from '@/types';
 
-type Props = {
-    task: Task;
-    items: TaskItem[];
-};
+type Props = { task: Task; items: TaskItem[] };
 
 export function TaskChecklist({ task, items }: Props) {
     const [newText, setNewText] = useState('');
@@ -22,53 +18,46 @@ export function TaskChecklist({ task, items }: Props) {
     const pct = total > 0 ? Math.round((done / total) * 100) : 0;
 
     function handleToggle(item: TaskItem) {
-        router.patch(
-            toggleItem({ task: task.id, item: item.id }).url,
-            {},
-            { preserveScroll: true },
-        );
+        router.patch(toggleItem({ task: task.id, item: item.id }).url, {}, { preserveScroll: true });
     }
 
     function handleAdd() {
-        if (!newText.trim()) {
-            return;
-        }
-
-        router.post(
-            storeItem(task.id).url,
-            { text: newText.trim() },
-            {
-                preserveScroll: true,
-                onSuccess: () => {
-                    setNewText('');
-                    setAdding(false);
-                },
-            },
-        );
+        if (!newText.trim()) return;
+        router.post(storeItem(task.id).url, { text: newText.trim() }, {
+            preserveScroll: true,
+            onSuccess: () => { setNewText(''); setAdding(false); },
+        });
     }
 
     function handleRemove(item: TaskItem) {
-        router.delete(destroyItem({ task: task.id, item: item.id }).url, {
-            preserveScroll: true,
-        });
+        router.delete(destroyItem({ task: task.id, item: item.id }).url, { preserveScroll: true });
     }
 
     return (
         <section>
-            <div className="mb-2 flex items-center justify-between">
-                <h2 className="text-sm font-semibold">Checklist</h2>
-                <span className="text-xs text-muted-foreground">
-                    {done}/{total} Items completed
-                </span>
+            {/* Header row with inline progress */}
+            <div className="mb-3 flex items-center gap-3">
+                <h2 className="shrink-0 text-sm font-semibold">Checklist</h2>
+                {total > 0 && (
+                    <>
+                        <span className="shrink-0 text-xs text-muted-foreground">
+                            {done}/{total} Items completed
+                        </span>
+                        <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-muted">
+                            <div
+                                className="h-full rounded-full bg-green-500 transition-all"
+                                style={{ width: `${pct}%` }}
+                            />
+                        </div>
+                    </>
+                )}
             </div>
-
-            <Progress value={pct} className="mb-3 h-1.5" />
 
             <ul className="space-y-1">
                 {items.map((item) => (
                     <li
                         key={item.id}
-                        className="group flex items-center gap-2 rounded-md border bg-card px-3 py-2 text-sm"
+                        className="group flex items-center gap-3 rounded-md border bg-card px-3 py-2 text-sm"
                     >
                         <Checkbox
                             checked={item.done}
@@ -84,7 +73,7 @@ export function TaskChecklist({ task, items }: Props) {
                         <Button
                             variant="ghost"
                             size="icon"
-                            className="size-6 opacity-0 group-hover:opacity-100"
+                            className="size-6 opacity-0 transition-opacity group-hover:opacity-100"
                             onClick={() => handleRemove(item)}
                         >
                             <Trash2 className="size-3" />
@@ -101,27 +90,13 @@ export function TaskChecklist({ task, items }: Props) {
                         value={newText}
                         onChange={(e) => setNewText(e.target.value)}
                         onKeyDown={(e) => {
-                            if (e.key === 'Enter') {
-                                handleAdd();
-                            }
-                            if (e.key === 'Escape') {
-                                setAdding(false);
-                                setNewText('');
-                            }
+                            if (e.key === 'Enter') handleAdd();
+                            if (e.key === 'Escape') { setAdding(false); setNewText(''); }
                         }}
                         className="h-8 text-sm"
                     />
-                    <Button size="sm" onClick={handleAdd}>
-                        Add
-                    </Button>
-                    <Button
-                        size="sm"
-                        variant="ghost"
-                        onClick={() => {
-                            setAdding(false);
-                            setNewText('');
-                        }}
-                    >
+                    <Button size="sm" onClick={handleAdd}>Add</Button>
+                    <Button size="sm" variant="ghost" onClick={() => { setAdding(false); setNewText(''); }}>
                         Cancel
                     </Button>
                 </div>

@@ -1,16 +1,39 @@
-import { MessageSquare } from 'lucide-react';
+import { MessageSquare, Send, Sparkles } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { Textarea } from '@/components/ui/textarea';
+import type { Task } from '@/types';
 
-// Phase 7 stub — chatroom linked to task
-export function TaskDiscussions() {
+type Props = { task: Task };
+
+// Phase 7 wires real chatroom — stub composer for now
+export function TaskDiscussions({ task: _ }: Props) {
     return (
         <section>
-            <h2 className="mb-2 text-sm font-semibold">Discussions</h2>
-            <div className="flex min-h-[120px] flex-col items-center justify-center gap-2 rounded-xl border border-dashed bg-muted/30 p-6 text-center">
-                <MessageSquare className="size-6 text-muted-foreground" />
-                <p className="text-sm text-muted-foreground">
-                    Task discussions will be available in a future update.
-                </p>
+            <h2 className="mb-3 text-sm font-semibold">Discussions</h2>
+
+            <div className="rounded-xl border bg-card">
+                <Textarea
+                    placeholder="Type in your message to join in the conversation..."
+                    className="min-h-[72px] resize-none border-0 text-sm shadow-none focus-visible:ring-0"
+                    disabled
+                />
+                <div className="flex items-center gap-0.5 border-t px-2 py-1.5">
+                    <Button variant="ghost" size="sm" className="h-7 gap-1.5 text-xs text-muted-foreground" disabled>
+                        <Sparkles className="size-3.5" />
+                        Ask AI
+                    </Button>
+                    <div className="ml-auto">
+                        <Button size="icon" className="size-7" disabled>
+                            <Send className="size-3.5" />
+                        </Button>
+                    </div>
+                </div>
             </div>
+
+            <p className="mt-3 flex items-center justify-center gap-1.5 text-xs text-muted-foreground">
+                <MessageSquare className="size-3.5" />
+                Discussions will be wired in Phase 7.
+            </p>
         </section>
     );
 }
