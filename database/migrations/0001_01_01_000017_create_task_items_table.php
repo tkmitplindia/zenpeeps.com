@@ -6,20 +6,19 @@ use Illuminate\Support\Facades\Schema;
 
 return new class extends Migration
 {
-    /**
-     * Run the migrations.
-     */
     public function up(): void
     {
         Schema::create('task_items', function (Blueprint $table) {
-            $table->id();
+            $table->uuid('id')->primary();
+            $table->foreignUuid('task_id')->constrained()->cascadeOnDelete();
+            $table->string('text');
+            $table->boolean('done')->default(false);
+            $table->unsignedInteger('position')->default(0);
             $table->timestamps();
+            $table->index(['task_id', 'position']);
         });
     }
 
-    /**
-     * Reverse the migrations.
-     */
     public function down(): void
     {
         Schema::dropIfExists('task_items');
