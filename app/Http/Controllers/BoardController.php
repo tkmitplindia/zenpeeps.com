@@ -78,7 +78,7 @@ class BoardController extends Controller
             $user
         );
 
-        return redirect()->route('boards.show', $board);
+        return to_route('boards.show', $board);
     }
 
     /**
@@ -131,7 +131,7 @@ class BoardController extends Controller
             $status
         );
 
-        return redirect()->route('boards.show', $board);
+        return to_route('boards.show', $board);
     }
 
     /**
@@ -145,6 +145,6 @@ class BoardController extends Controller
 
         $destroyBoardAction->execute($board);
 
-        return redirect()->route('boards.index');
+        return to_route('boards.index');
     }
 }
