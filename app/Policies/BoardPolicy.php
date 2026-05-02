@@ -30,7 +30,7 @@ class BoardPolicy
             return $user->id === $team->owner()?->id;
         }
 
-        return $team->members()->where('user_id', $user->id)->exists();
+        return $board->members()->where('user_id', $user->id)->exists();
     }
 
     /**
@@ -55,7 +55,7 @@ class BoardPolicy
             return $user->id === $team->owner()?->id;
         }
 
-        return $team->members()->where('user_id', $user->id)->exists();
+        return $board->members()->where('user_id', $user->id)->exists();
     }
 
     /**
@@ -68,7 +68,11 @@ class BoardPolicy
             return false;
         }
 
-        return $team->owner_id === $user->id;
+        if ($team->isPersonal()) {
+            return $user->id === $team->owner()?->id;
+        }
+
+        return $board->members()->where('user_id', $user->id)->exists();
     }
 
     /**
@@ -81,7 +85,11 @@ class BoardPolicy
             return false;
         }
 
-        return $team->owner_id === $user->id;
+        if ($team->isPersonal()) {
+            return $user->id === $team->owner()?->id;
+        }
+
+        return $board->members()->where('user_id', $user->id)->exists();
     }
 
     /**
@@ -94,6 +102,10 @@ class BoardPolicy
             return false;
         }
 
-        return $team->owner_id === $user->id;
+        if ($team->isPersonal()) {
+            return $user->id === $team->owner()?->id;
+        }
+
+        return $board->members()->where('user_id', $user->id)->exists();
     }
 }

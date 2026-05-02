@@ -15,7 +15,7 @@ class StoreBoardColumnRequest extends FormRequest
         $user = request()->user();
         $board = request()->route('board');
 
-        return $user->can('create', $board);
+        return $user->can('update', $board);
     }
 
     /**
@@ -26,7 +26,7 @@ class StoreBoardColumnRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'name' => 'required|max:255|unique:board_columns,name',
         ];
     }
 }

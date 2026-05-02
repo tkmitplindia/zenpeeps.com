@@ -33,6 +33,8 @@ class StoreBoardRequest extends FormRequest
             'status' => ['required', 'string', Rule::enum(BoardStatus::class)],
             'columns' => ['nullable', 'array', 'min:1'],
             'columns.*.name' => ['required', 'string', 'max:255'],
+            'members' => ['nullable', 'array'],
+            'members.*' => ['required', 'exists:users,id'],
         ];
     }
 }

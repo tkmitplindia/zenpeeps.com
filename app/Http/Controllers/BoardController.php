@@ -51,11 +51,16 @@ class BoardController extends Controller
      */
     public function create()
     {
-        if (request()->user()->cannot('create', Board::class)) {
+        $user = request()->user();
+        if ($user->cannot('create', Board::class)) {
             abort(403);
         }
 
-        return inertia('boards/create');
+        $teamMembers = $user->current_team->members;
+
+        return inertia('boards/create', [
+            'teamMembers' => $teamMembers,
+        ]);
     }
 
     /**
@@ -70,6 +75,7 @@ class BoardController extends Controller
         $description = $request->validated('description');
         $status = $request->validated('status', BoardStatus::Active->value);
         $columns = $request->validated('columns', []);
+        $members = $request->validated('members', []);
 
         $board = $storeBoardAction->execute(
             $team,
@@ -77,6 +83,7 @@ class BoardController extends Controller
             $description ?? '',
             $status,
             $columns,
+            $members,
             $user
         );
 
@@ -125,12 +132,14 @@ class BoardController extends Controller
         $name = $request->validated('name');
         $description = $request->validated('description');
         $status = $request->validated('status', BoardStatus::Active->value);
+        $members = $request->validated('members', []);
 
         $updateBoardAction->execute(
             $board,
             $name,
             $description ?? '',
-            $status
+            $status,
+            $members
         );
 
         return to_route('boards.show', $board);

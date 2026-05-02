@@ -30,7 +30,7 @@ class BoardColumnPolicy
      */
     public function create(User $user, Board $board): bool
     {
-        return $user->can('create', $board);
+        return $user->can('update', $board);
     }
 
     /**

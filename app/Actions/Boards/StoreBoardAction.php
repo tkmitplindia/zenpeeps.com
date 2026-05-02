@@ -10,9 +10,9 @@ use Illuminate\Support\Facades\DB;
 
 final class StoreBoardAction
 {
-    public function execute(Team $team, string $name, string $description, string $status, array $columns, User $createdBy): Board
+    public function execute(Team $team, string $name, string $description, string $status, array $columns, array $members, User $createdBy): Board
     {
-        $board =  DB::transaction(function () use ($team, $name, $description, $status, $columns, $createdBy) {
+        $board =  DB::transaction(function () use ($team, $name, $description, $status, $columns, $members, $createdBy) {
             $board = $team->boards()->create([
                 'name' => $name,
                 'description' => $description,
@@ -26,6 +26,10 @@ final class StoreBoardAction
                     'order' => $index + 1,
                 ]);
             });
+
+            if (!empty($members)) {
+                $board->members()->attach($members);
+            }
 
             return $board;
         });

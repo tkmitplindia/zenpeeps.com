@@ -28,6 +28,8 @@ class UpdateBoardRequest extends FormRequest
             'name' => ['required', 'string', 'max:255', Rule::unique('boards', 'name')->ignore($this->route('board'))],
             'description' => ['nullable', 'string', 'max:255'],
             'status' => ['required', 'string', Rule::enum(BoardStatus::class)],
+            'members' => ['nullable', 'array'],
+            'members.*' => ['required', 'exists:users,id'],
         ];
     }
 }

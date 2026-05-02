@@ -4,6 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class UpdateBoardColumnRequest extends FormRequest
 {
@@ -26,7 +27,12 @@ class UpdateBoardColumnRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                "unique:board_columns,name,{$this->route('boardColumn')->id}"
+            ],
         ];
     }
 }

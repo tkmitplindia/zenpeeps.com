@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\BoardStatus;
+use App\Models\Board;
 use App\Models\Team;
 use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
@@ -23,6 +24,12 @@ return new class extends Migration
             $table->foreignIdFor(User::class, 'created_by')->cascadeOnDelete();
             $table->timestamps();
             $table->softDeletes();
+        });
+
+        Schema::create('board_members', function (Blueprint $table) {
+            $table->foreignIdFor(Board::class)->cascadeOnDelete();
+            $table->foreignIdFor(User::class)->cascadeOnDelete();
+            $table->primary(['board_id', 'user_id']);
         });
     }
 
