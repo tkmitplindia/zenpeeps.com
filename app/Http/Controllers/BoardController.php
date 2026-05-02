@@ -69,12 +69,14 @@ class BoardController extends Controller
         $name = $request->validated('name');
         $description = $request->validated('description');
         $status = $request->validated('status', BoardStatus::Active->value);
+        $columns = $request->validated('columns', []);
 
         $board = $storeBoardAction->execute(
             $team,
             $name,
             $description ?? '',
             $status,
+            $columns,
             $user
         );
 
