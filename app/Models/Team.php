@@ -16,10 +16,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable(['name', 'slug', 'is_personal'])]
 class Team extends Model
 {
+    use GeneratesUniqueTeamSlugs;
+
+    use HasFactory;
     /** @use HasFactory<TeamFactory> */
     use HasUuids;
-    use GeneratesUniqueTeamSlugs;
-    use HasFactory;
     use SoftDeletes;
 
     /**

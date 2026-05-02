@@ -10,14 +10,11 @@ final class IndexBoardAction
 {
     /**
      * Get a paginated list of boards for a team.
-     * 
-     * @param \App\Models\Team $team
-     * @param string $search
-     * @param string $sort
-     * @param string $order
-     * @param int $limit
-     * 
-     * @return \Illuminate\Pagination\LengthAwarePaginator
+     *
+     * @param  string  $search
+     * @param  string  $sort
+     * @param  string  $order
+     * @param  int  $limit
      */
     public function execute(Team $team, $search, $sort, $order, $limit): LengthAwarePaginator
     {

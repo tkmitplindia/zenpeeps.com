@@ -5,14 +5,13 @@ namespace App\Actions\Boards;
 use App\Models\Board;
 use App\Models\Team;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 final class StoreBoardAction
 {
     public function execute(Team $team, string $name, string $description, string $status, array $columns, array $members, User $createdBy): Board
     {
-        $board =  DB::transaction(function () use ($team, $name, $description, $status, $columns, $members, $createdBy) {
+        $board = DB::transaction(function () use ($team, $name, $description, $status, $columns, $members, $createdBy) {
             $board = $team->boards()->create([
                 'name' => $name,
                 'description' => $description,
@@ -27,7 +26,7 @@ final class StoreBoardAction
                 ]);
             });
 
-            if (!empty($members)) {
+            if (! empty($members)) {
                 $board->members()->attach($members);
             }
 

@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Database\Factories\BoardColumnFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Builder;
@@ -15,7 +16,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class BoardColumn
  *
- * @package App\Models
  *
  * @property string $id
  * @property string $board_id
@@ -24,11 +24,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon|null $deleted_at
- *
  * @property Board $board
  *
  * @method BelongsTo<Board> board()
- * 
  * @method static Builder ofBoard(Board $board)
  * @method static Builder last()
  * @method static Builder first()
@@ -36,8 +34,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 #[Fillable(['board_id', 'name'])]
 class BoardColumn extends Model
 {
-    /** @use HasFactory<\Database\Factories\BoardColumnFactory> */
+    /** @use HasFactory<BoardColumnFactory> */
     use HasFactory;
+
     use HasUuids;
     use SoftDeletes;
 

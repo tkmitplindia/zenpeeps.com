@@ -8,7 +8,7 @@ final class ShowBoardAction
 {
     public function execute(Board $board)
     {
-        // TODO Add eager loading for the board, 
+        // TODO Add eager loading for the board,
         return $board;
     }
 }

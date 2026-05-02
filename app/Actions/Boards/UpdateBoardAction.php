@@ -16,7 +16,7 @@ final class UpdateBoardAction
                 'status' => $status,
             ]);
 
-            if (!empty($members)) {
+            if (! empty($members)) {
                 $board->members()->sync($members);
             } else {
                 $board->members()->detach();

@@ -4,22 +4,22 @@ namespace App\Models;
 
 use App\Enums\BoardStatus;
 use Carbon\Carbon;
+use Database\Factories\BoardFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Eloquent\Collection;
-use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Query\Builder;
 
 /**
  * Class Board
  *
- * @package App\Models
  *
  * @property string $id
  * @property string $name
@@ -30,7 +30,6 @@ use Illuminate\Database\Query\Builder;
  * @property Carbon $created_at
  * @property Carbon $updated_at
  * @property Carbon $deleted_at
- *
  * @property Team $team
  * @property User $creator
  * @property Collection<int, BoardColumn> $columns
@@ -38,7 +37,6 @@ use Illuminate\Database\Query\Builder;
  * @method BelongsTo<Team> team()
  * @method BelongsTo<User> creator()
  * @method HasMany<BoardColumn> columns()
- * 
  * @method static Builder active()
  * @method static Builder archived()
  * @method static Builder createdBy(User $user)
@@ -47,8 +45,9 @@ use Illuminate\Database\Query\Builder;
 #[Fillable(['name', 'description', 'status', 'team_id', 'created_by'])]
 class Board extends Model
 {
-    /** @use HasFactory<\Database\Factories\BoardFactory> */
+    /** @use HasFactory<BoardFactory> */
     use HasFactory;
+
     use HasUuids;
     use SoftDeletes;
 

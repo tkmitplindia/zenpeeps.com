@@ -1,5 +1,5 @@
-import { Link, router } from '@inertiajs/react';
-import { LogOut, Settings } from 'lucide-react';
+import { Link, router, usePage } from '@inertiajs/react';
+import { Check, LogOut, Plus, Settings } from 'lucide-react';
 import {
     DropdownMenuGroup,
     DropdownMenuItem,
@@ -10,7 +10,9 @@ import { UserInfo } from '@/components/user-info';
 import { useMobileNavigation } from '@/hooks/use-mobile-navigation';
 import { logout } from '@/routes';
 import { edit } from '@/routes/profile';
-import type { User } from '@/types';
+import { switchMethod } from '@/routes/teams';
+import type { Team, User } from '@/types';
+import CreateTeamModal from './create-team-modal';
 
 type Props = {
     user: User;
@@ -18,10 +20,38 @@ type Props = {
 
 export function UserMenuContent({ user }: Props) {
     const cleanup = useMobileNavigation();
+    const { currentTeam, teams } = usePage().props;
 
     const handleLogout = () => {
         cleanup();
         router.flushAll();
+    };
+
+    const switchTeam = (team: Team) => {
+        const previousTeamSlug = currentTeam?.slug;
+
+        router.visit(switchMethod(team.slug), {
+            onFinish: () => {
+                if (!previousTeamSlug || typeof window === 'undefined') {
+                    router.reload();
+
+                    return;
+                }
+
+                const currentUrl = `${window.location.pathname}${window.location.search}${window.location.hash}`;
+                const segment = `/${previousTeamSlug}`;
+
+                if (currentUrl.includes(segment)) {
+                    router.visit(currentUrl.replace(segment, `/${team.slug}`), {
+                        replace: true,
+                    });
+
+                    return;
+                }
+
+                router.reload();
+            },
+        });
     };
 
     return (
@@ -31,6 +61,31 @@ export function UserMenuContent({ user }: Props) {
                     <UserInfo user={user} showEmail={true} />
                 </div>
             </DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuGroup>
+                <DropdownMenuLabel className="text-xs text-muted-foreground">
+                    Teams
+                </DropdownMenuLabel>
+                {teams.map((team) => (
+                    <DropdownMenuItem
+                        key={team.id}
+                        data-test="team-switcher-item"
+                        onSelect={() => switchTeam(team)}
+                    >
+                        {team.name}
+                        {currentTeam?.id === team.id && <Check />}
+                    </DropdownMenuItem>
+                ))}
+                <CreateTeamModal>
+                    <DropdownMenuItem
+                        data-test="team-switcher-new-team"
+                        onSelect={(event) => event.preventDefault()}
+                    >
+                        <Plus />
+                        <span className="text-muted-foreground">New team</span>
+                    </DropdownMenuItem>
+                </CreateTeamModal>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
                 <DropdownMenuItem asChild>

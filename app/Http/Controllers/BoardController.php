@@ -21,7 +21,7 @@ class BoardController extends Controller
     {
         $user = request()->user();
 
-        if (!$user->can('viewAny', Board::class)) {
+        if (! $user->can('viewAny', Board::class)) {
             abort(403);
         }
 

@@ -5,7 +5,6 @@ namespace App\Policies;
 use App\Models\Board;
 use App\Models\BoardColumn;
 use App\Models\User;
-use Illuminate\Auth\Access\Response;
 
 class BoardColumnPolicy
 {
