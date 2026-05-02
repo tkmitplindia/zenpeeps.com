@@ -3,9 +3,10 @@ import {
     SortableContext,
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
-import { router } from '@inertiajs/react';
+import { Link } from '@inertiajs/react';
 import { Plus } from 'lucide-react';
 import { create } from '@/actions/App/Http/Controllers/TaskController';
+import { EmptyColumn } from '@/components/boards/empty-column';
 import { TaskCard } from '@/components/boards/task-card';
 import type { BoardColumn as BoardColumnType } from '@/types';
 
@@ -30,19 +31,15 @@ export function BoardColumn({ column }: Props) {
                         </span>
                     )}
                 </div>
-                <button
+                <Link
+                    href={create.url(column.board_id, {
+                        query: { column_id: column.id },
+                    })}
                     className="flex size-6 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
                     aria-label="Add task"
-                    onClick={() =>
-                        router.visit(
-                            create.url(column.board_id, {
-                                query: { column_id: column.id },
-                            }),
-                        )
-                    }
                 >
                     <Plus className="size-3.5" />
-                </button>
+                </Link>
             </div>
 
             <SortableContext
@@ -55,9 +52,13 @@ export function BoardColumn({ column }: Props) {
                     className="flex min-h-24 flex-col gap-2 rounded-xl bg-muted/40 p-2"
                     data-column-id={column.id}
                 >
-                    {column.tasks?.map((task) => (
-                        <TaskCard key={task.id} task={task} />
-                    ))}
+                    {taskCount === 0 ? (
+                        <EmptyColumn column={column} />
+                    ) : (
+                        column.tasks?.map((task) => (
+                            <TaskCard key={task.id} task={task} />
+                        ))
+                    )}
                 </div>
             </SortableContext>
         </div>

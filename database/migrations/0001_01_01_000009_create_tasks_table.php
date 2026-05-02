@@ -17,7 +17,12 @@ return new class extends Migration
             $table->string('title');
             $table->text('description')->nullable();
             $table->unsignedInteger('position')->default(0);
+            $table->string('priority')->default('medium');
             $table->date('due_date')->nullable();
+            $table->unsignedInteger('estimate_minutes')->nullable();
+            $table->unsignedInteger('elapsed_seconds')->default(0);
+            $table->timestamp('time_tracker_started_at')->nullable();
+            $table->timestamp('completed_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
             $table->index(['board_column_id', 'position']);

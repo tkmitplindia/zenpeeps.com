@@ -50,6 +50,7 @@
 | 42 | Create `task_assignees` pivot table                               | DONE     | 5f2160e    |                                     |
 | 43 | Build Task actions                                                | DONE     | d3aabfb    | 12 actions: CRUD, move, items, timer; tasks table extended with priority/estimate/timer columns |
 | 44 | Build Task routes and the task detail page `pages/tasks/show.t... | DONE     | 6bf6ca4    | Full task detail page matching design; sidebar with timer, prev/next nav; 8 tests pass |
+| —  | UI polish & component modularisation (Phase 6)                   | DONE     | 326c317    | tasks.create route; component split (TaskCreateForm, TaskHeader, TaskCreateSidebar); DnD handle fix; click-to-navigate on task cards |
 | 45 | Create `Chatroom` model and migration                             | TODO     | -          |                                     |
 | 46 | Hook chatroom auto-creation                                       | TODO     | -          |                                     |
 | 47 | Create `Message` model and migration                              | TODO     | -          |                                     |
