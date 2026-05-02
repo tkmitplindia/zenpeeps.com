@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\BoardColumnController;
+use App\Http\Controllers\BoardController;
 use App\Http\Controllers\Teams\TeamInvitationController;
 use App\Http\Middleware\EnsureTeamMembership;
 use Illuminate\Support\Facades\Route;
@@ -13,10 +15,15 @@ Route::prefix('{current_team}')
     ->middleware(['auth', 'verified', EnsureTeamMembership::class])
     ->group(function () {
         Route::inertia('dashboard', 'dashboard')->name('dashboard');
+
+        Route::resource('boards', BoardController::class);
+        Route::resource('boards.columns', BoardColumnController::class)
+            ->only(['store', 'update', 'destroy', 'reorder'])
+            ->scoped(['boardColumn' => 'column']);
     });
 
 Route::middleware(['auth'])->group(function () {
     Route::get('invitations/{invitation}/accept', [TeamInvitationController::class, 'accept'])->name('invitations.accept');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

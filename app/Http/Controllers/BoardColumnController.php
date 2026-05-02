@@ -15,18 +15,6 @@ use App\Models\BoardColumn;
 class BoardColumnController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     */
-    public function index(Board $board, IndexBoardColumnAction $indexBoardColumnAction)
-    {
-        if (request()->user()->cannot('view', $board)) {
-            abort(403);
-        }
-
-        return $indexBoardColumnAction->execute($board);
-    }
-
-    /**
      * Show the form for creating a new resource.
      */
     public function create(Board $board)
@@ -49,30 +37,6 @@ class BoardColumnController extends Controller
         $storeBoardColumnAction->execute($board, $name);
 
         return redirect()->back();
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(BoardColumn $boardColumn, ShowBoardColumnAction $showBoardColumnAction)
-    {
-        if (request()->user()->cannot('view', $boardColumn)) {
-            abort(403);
-        }
-
-        return $showBoardColumnAction->execute($boardColumn);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(BoardColumn $boardColumn)
-    {
-        if (request()->user()->cannot('update', $boardColumn)) {
-            abort(403);
-        }
-
-        return to_route('boards.show', $boardColumn->board);
     }
 
     /**
