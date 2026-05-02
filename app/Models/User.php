@@ -10,6 +10,8 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Database\Eloquent\Concerns\HasUuids;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Fortify\TwoFactorAuthenticatable;
 
 #[Fillable(['name', 'email', 'password', 'current_team_id'])]
@@ -17,7 +19,12 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, HasTeams, Notifiable, TwoFactorAuthenticatable;
+    use HasUuids;
+    use HasFactory;
+    use HasTeams;
+    use Notifiable;
+    use TwoFactorAuthenticatable;
+    use SoftDeletes;
 
     /**
      * Get the attributes that should be cast.
