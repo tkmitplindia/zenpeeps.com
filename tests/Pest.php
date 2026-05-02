@@ -1,10 +1,6 @@
 <?php
 
-use App\Enums\ProjectRole;
-use App\Models\Project;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Str;
 use Tests\TestCase;
 
 /*
@@ -19,7 +15,7 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
-    ->use(RefreshDatabase::class)
+ // ->use(RefreshDatabase::class)
     ->in('Feature');
 
 /*
@@ -48,11 +44,7 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function attachMember(Project $project, User $user, ProjectRole $role): void
+function something()
 {
-    $project->members()->attach($user->id, [
-        'id' => (string) Str::orderedUuid(),
-        'role' => $role->value,
-        'joined_at' => now(),
-    ]);
+    // ..
 }

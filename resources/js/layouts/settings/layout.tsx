@@ -1,5 +1,4 @@
-import { Link, usePage } from '@inertiajs/react';
-import { useMemo } from 'react';
+import { Link } from '@inertiajs/react';
 import type { PropsWithChildren } from 'react';
 import Heading from '@/components/heading';
 import { Button } from '@/components/ui/button';
@@ -8,48 +7,35 @@ import { useCurrentUrl } from '@/hooks/use-current-url';
 import { cn, toUrl } from '@/lib/utils';
 import { edit as editAppearance } from '@/routes/appearance';
 import { edit } from '@/routes/profile';
-import {
-    billing as billingProject,
-    index as projectsIndex,
-    show as showProject,
-    usage as usageProject,
-} from '@/routes/projects';
 import { edit as editSecurity } from '@/routes/security';
+import { index as teams } from '@/routes/teams';
 import type { NavItem } from '@/types';
+
+const sidebarNavItems: NavItem[] = [
+    {
+        title: 'Profile',
+        href: edit(),
+        icon: null,
+    },
+    {
+        title: 'Security',
+        href: editSecurity(),
+        icon: null,
+    },
+    {
+        title: 'Teams',
+        href: teams(),
+        icon: null,
+    },
+    {
+        title: 'Appearance',
+        href: editAppearance(),
+        icon: null,
+    },
+];
 
 export default function SettingsLayout({ children }: PropsWithChildren) {
     const { isCurrentOrParentUrl } = useCurrentUrl();
-    const { currentProject } = usePage().props;
-
-    const sidebarNavItems: NavItem[] = useMemo(
-        () => [
-            { title: 'Profile', href: edit(), icon: null },
-            { title: 'Security', href: editSecurity(), icon: null },
-            { title: 'Appearance', href: editAppearance(), icon: null },
-            {
-                title: 'Project',
-                href: currentProject
-                    ? showProject(currentProject.id)
-                    : projectsIndex(),
-                icon: null,
-            },
-            ...(currentProject
-                ? [
-                      {
-                          title: 'Billing',
-                          href: billingProject(currentProject.id),
-                          icon: null,
-                      },
-                      {
-                          title: 'Usage',
-                          href: usageProject(currentProject.id),
-                          icon: null,
-                      },
-                  ]
-                : []),
-        ],
-        [currentProject],
-    );
 
     return (
         <div className="px-4 py-6">

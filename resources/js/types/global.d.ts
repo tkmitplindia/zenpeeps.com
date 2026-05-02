@@ -1,5 +1,5 @@
 import type { Auth } from '@/types/auth';
-import type { Project } from '@/types/project';
+import type { Team } from '@/types/teams';
 
 declare module '@inertiajs/core' {
     export interface InertiaConfig {
@@ -7,9 +7,8 @@ declare module '@inertiajs/core' {
             name: string;
             auth: Auth;
             sidebarOpen: boolean;
-            projects: Project[];
-            currentProject: Project | null;
-            storage: { used_bytes: number; quota_bytes: number } | null;
+            currentTeam: Team | null;
+            teams: Team[];
             [key: string]: unknown;
         };
     }

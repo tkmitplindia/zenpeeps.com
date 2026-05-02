@@ -1,28 +1,22 @@
 <?php
 
-use App\Actions\Project\StoreProjectAction;
 use App\Models\User;
 
 test('guests are redirected to the login page', function () {
+    $user = User::factory()->create();
+    $team = $user->currentTeam;
+
     $response = $this->get(route('dashboard'));
     $response->assertRedirect(route('login'));
 });
 
-test('authenticated users without a current project are redirected to the project picker', function () {
+test('authenticated users can visit the dashboard', function () {
     $user = User::factory()->create();
-    $this->actingAs($user);
+    $team = $user->currentTeam;
 
-    $response = $this->get(route('dashboard'));
-    $response->assertRedirect(route('projects.index'));
-});
+    $response = $this
+        ->actingAs($user)
+        ->get(route('dashboard'));
 
-test('authenticated users with a current project can visit the dashboard', function () {
-    $user = User::factory()->create();
-    $project = (new StoreProjectAction)->handle($user, ['name' => 'Acme']);
-
-    $this->actingAs($user)
-        ->withSession(['current_project_id' => $project->id]);
-
-    $response = $this->get(route('dashboard'));
     $response->assertOk();
 });

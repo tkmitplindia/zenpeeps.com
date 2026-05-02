@@ -2,9 +2,6 @@
 
 namespace App\Providers;
 
-use App\Services\Payments\FakePaymentProvider;
-use App\Services\Payments\PaymentProvider;
-use App\Services\Payments\StripePaymentProvider;
 use Carbon\CarbonImmutable;
 use Illuminate\Support\Facades\Date;
 use Illuminate\Support\Facades\DB;
@@ -18,11 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        $this->app->bind(PaymentProvider::class, function () {
-            return config('services.payments.driver') === 'stripe'
-                ? new StripePaymentProvider
-                : new FakePaymentProvider;
-        });
+        //
     }
 
     /**
