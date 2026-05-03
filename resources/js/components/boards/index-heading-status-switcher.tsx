@@ -1,9 +1,9 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Button } from '../ui/button';
-import { ButtonGroup } from '../ui/button-group';
 import { ActivityIcon, ArchiveIcon } from 'lucide-react';
 import { index } from '@/routes/boards';
-import { BoardIndexPageProps } from '@/types/board';
+import type { BoardIndexPageProps } from '@/types/board';
+import { Button } from '../ui/button';
+import { ButtonGroup } from '../ui/button-group';
 
 export function StatusSwitcher() {
     const { status, filters } = usePage<BoardIndexPageProps>().props;

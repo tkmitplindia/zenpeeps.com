@@ -3,8 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Actions\BoardColumns\DestroyBoardColumnAction;
-use App\Actions\BoardColumns\IndexBoardColumnAction;
-use App\Actions\BoardColumns\ShowBoardColumnAction;
 use App\Actions\BoardColumns\StoreBoardColumnAction;
 use App\Actions\BoardColumns\UpdateBoardColumnAction;
 use App\Http\Requests\StoreBoardColumnRequest;

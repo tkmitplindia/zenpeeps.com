@@ -1,14 +1,16 @@
 import { Link, usePage } from '@inertiajs/react';
-import { BoardIndexPageProps } from '@/types/board';
-import { Team } from '@/types';
 import { show } from '@/routes/boards';
+import type { Team } from '@/types';
+import type { BoardIndexPageProps } from '@/types/board';
 
 export function IndexListView() {
-    const { boards, currentTeam } = usePage<BoardIndexPageProps & { currentTeam: Team }>().props;
+    const { boards, currentTeam } = usePage<
+        BoardIndexPageProps & { currentTeam: Team }
+    >().props;
 
     if (boards.data.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center animate-in fade-in-50">
+            <div className="flex animate-in flex-col items-center justify-center rounded-xl border border-dashed p-8 text-center fade-in-50">
                 <p className="text-sm text-muted-foreground">No boards found</p>
             </div>
         );
@@ -19,14 +21,19 @@ export function IndexListView() {
             {boards.data.map((board, index) => (
                 <Link
                     key={board.id}
-                    href={show({ current_team: currentTeam.slug, board: board.id }).url}
-                    className={`flex flex-col sm:flex-row sm:items-center justify-between p-4 hover:bg-muted/50 transition-colors ${
+                    href={
+                        show({
+                            current_team: currentTeam.slug,
+                            board: board.id,
+                        }).url
+                    }
+                    className={`flex flex-col justify-between p-4 transition-colors hover:bg-muted/50 sm:flex-row sm:items-center ${
                         index !== boards.data.length - 1 ? 'border-b' : ''
                     }`}
                 >
-                    <div className="flex flex-col gap-1 mb-2 sm:mb-0">
+                    <div className="mb-2 flex flex-col gap-1 sm:mb-0">
                         <span className="font-semibold">{board.name}</span>
-                        <span className="text-sm text-muted-foreground line-clamp-1">
+                        <span className="line-clamp-1 text-sm text-muted-foreground">
                             {board.description || 'No description provided.'}
                         </span>
                     </div>

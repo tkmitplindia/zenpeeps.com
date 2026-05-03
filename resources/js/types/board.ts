@@ -1,5 +1,5 @@
-import type { PaginatedResponse, SoftDeletableModel } from './base';
 import type { User } from './auth';
+import type { PaginatedResponse, SoftDeletableModel } from './base';
 import type { Team } from './teams';
 
 export type BoardStatus = 'active' | 'archived';

@@ -1,4 +1,8 @@
+import { Link } from '@inertiajs/react';
 import { KanbanIcon, PlusIcon } from 'lucide-react';
+import { useCurrentTeam } from '@/hooks/use-current-team';
+import { create } from '@/routes/boards';
+import { Button } from '../ui/button';
 import {
     Empty,
     EmptyContent,
@@ -7,13 +11,10 @@ import {
     EmptyMedia,
     EmptyTitle,
 } from '../ui/empty';
-import { Button } from '../ui/button';
-import { Link } from '@inertiajs/react';
-import { create } from '@/routes/boards';
-import { useCurrentTeam } from '@/hooks/use-current-team';
 
 export function BoardsEmpty() {
     const currentTeam = useCurrentTeam();
+
     return (
         <Empty>
             <EmptyHeader>

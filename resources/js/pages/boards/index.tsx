@@ -1,11 +1,11 @@
-import { BoardIndexHeading } from '@/components/boards/index-heading';
-import { IndexGridView } from '@/components/boards/index-grid-view';
-import { IndexListView } from '@/components/boards/index-list-view';
-import { index } from '@/routes/boards';
-import { Team } from '@/types';
-import { BoardIndexPageProps } from '@/types/board';
 import { Head, usePage } from '@inertiajs/react';
 import { BoardsEmpty } from '@/components/boards/index-empty';
+import { IndexGridView } from '@/components/boards/index-grid-view';
+import { BoardIndexHeading } from '@/components/boards/index-heading';
+import { IndexListView } from '@/components/boards/index-list-view';
+import { index } from '@/routes/boards';
+import type { Team } from '@/types';
+import type { BoardIndexPageProps } from '@/types/board';
 
 export default function BoardsIndexPage() {
     const { view, boards } = usePage<BoardIndexPageProps>().props;

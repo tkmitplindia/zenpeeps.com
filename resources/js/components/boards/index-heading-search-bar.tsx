@@ -1,9 +1,9 @@
 import { useForm, usePage } from '@inertiajs/react';
-import { Button } from '../ui/button';
-import { Input } from '../ui/input';
 import { SearchIcon } from 'lucide-react';
 import { index } from '@/routes/boards';
-import { BoardIndexPageProps } from '@/types/board';
+import type { BoardIndexPageProps } from '@/types/board';
+import { Button } from '../ui/button';
+import { Input } from '../ui/input';
 
 export function SearchBar() {
     const { filters } = usePage<BoardIndexPageProps>().props;

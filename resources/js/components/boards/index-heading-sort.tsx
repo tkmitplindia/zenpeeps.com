@@ -1,18 +1,18 @@
 import { Link, usePage } from '@inertiajs/react';
-import { Button } from '../ui/button';
 import {
     ArrowDownWideNarrowIcon,
     ArrowUpNarrowWideIcon,
     ChevronDownIcon,
 } from 'lucide-react';
+import { index } from '@/routes/boards';
+import type { BoardIndexPageProps } from '@/types/board';
+import { Button } from '../ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { index } from '@/routes/boards';
-import { BoardIndexPageProps } from '@/types/board';
 
 export function Sort() {
     const { filters, currentTeam } = usePage<BoardIndexPageProps>().props;

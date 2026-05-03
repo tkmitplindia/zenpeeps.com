@@ -12,11 +12,6 @@ final class IndexBoardAction
     /**
      * Get a paginated list of boards for a team.
      *
-     * @param  string|null  $search
-     * @param  BoardStatus|null  $status
-     * @param  string|null  $sort
-     * @param  string|null  $order
-     * @param  int|null  $limit
      *
      * @return LengthAwarePaginator<Board>
      */

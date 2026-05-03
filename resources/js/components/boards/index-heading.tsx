@@ -1,13 +1,13 @@
+import { Link, usePage } from '@inertiajs/react';
+import { PlusIcon } from 'lucide-react';
+import { create } from '@/routes/boards';
+import type { BoardIndexPageProps } from '@/types/board';
 import Heading from '../heading';
 import { Button } from '../ui/button';
-import { create } from '@/routes/boards';
-import { PlusIcon } from 'lucide-react';
 import { SearchBar } from './index-heading-search-bar';
+import { Sort } from './index-heading-sort';
 import { StatusSwitcher } from './index-heading-status-switcher';
 import { ViewSwitcher } from './index-heading-view-switcher';
-import { Sort } from './index-heading-sort';
-import { Link, usePage } from '@inertiajs/react';
-import { BoardIndexPageProps } from '@/types/board';
 
 export function BoardIndexHeading() {
     const { currentTeam } = usePage<BoardIndexPageProps>().props;
