@@ -11,13 +11,14 @@ use App\Enums\BoardStatus;
 use App\Http\Requests\StoreBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
 use App\Models\Board;
+use App\Models\Team;
 
 class BoardController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index(IndexBoardAction $indexBoardAction)
+    public function index(Team $current_team, IndexBoardAction $indexBoardAction)
     {
         $user = request()->user();
 
@@ -25,24 +26,33 @@ class BoardController extends Controller
             abort(403);
         }
 
-        $team = $user->current_team;
         $search = request('search');
+        $status = request('status', BoardStatus::Active->value);
         $sort = request('sort', 'created_at');
         $order = request('order', 'desc');
         $limit = request('limit', 15);
         $view = request('view', 'grid');
 
-        $data = $indexBoardAction->execute($team, $search, $sort, $order, $limit);
+        $data = $indexBoardAction->execute(
+            $current_team,
+            $search,
+            $status ? BoardStatus::tryFrom($status) : null,
+            $sort,
+            $order,
+            $limit
+        );
 
-        return inertia('boards/Index', [
+        return inertia('boards/index', [
             'data' => $data,
             'filters' => [
                 'search' => $search,
+                'status' => $status,
                 'sort' => $sort,
                 'order' => $order,
                 'limit' => $limit,
             ],
             'view' => $view,
+            'status' => $status,
         ]);
     }
 

@@ -15,7 +15,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Illuminate\Database\Query\Builder;
+use Illuminate\Database\Eloquent\Builder;
 
 /**
  * Class Board
@@ -79,9 +79,9 @@ class Board extends Model
     }
 
     #[Scope]
-    protected function ofTeam(Builder $query): Builder
+    protected function ofTeam(Builder $query, Team $team): Builder
     {
-        return $query->where('team_id', request()->user()->current_team_id);
+        return $query->where('team_id', $team->id);
     }
 
     #[Scope]

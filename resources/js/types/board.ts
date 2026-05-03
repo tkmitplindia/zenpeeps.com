@@ -30,6 +30,7 @@ export type BoardIndexPageProps = {
         sort: string;
         order: string;
     };
+    view: 'grid' | 'list';
 };
 
 export type BoardShowPageProps = {

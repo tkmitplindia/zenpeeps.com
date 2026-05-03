@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { LayoutGrid } from 'lucide-react';
+import { KanbanIcon, LayoutGrid, LayoutGridIcon } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
@@ -13,6 +13,7 @@ import {
     SidebarMenuItem,
 } from '@/components/ui/sidebar';
 import { dashboard } from '@/routes';
+import { index as boardIndex } from '@/routes/boards';
 import type { NavItem } from '@/types';
 
 export function AppSidebar() {
@@ -25,7 +26,12 @@ export function AppSidebar() {
         {
             title: 'Dashboard',
             href: dashboardUrl,
-            icon: LayoutGrid,
+            icon: LayoutGridIcon,
+        },
+        {
+            title: 'Boards',
+            href: boardIndex(page.props.currentTeam?.slug || ''),
+            icon: KanbanIcon,
         },
     ];
 
