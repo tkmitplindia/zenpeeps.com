@@ -119,7 +119,7 @@ export default function CreateBoardPage() {
                                 onChange={(members) =>
                                     setData('members', members)
                                 }
-                                variant="dropdown"
+                                variant="grid"
                             />
                             <InputError message={errors.members} />
                         </div>

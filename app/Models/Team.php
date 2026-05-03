@@ -87,6 +87,16 @@ class Team extends Model
     }
 
     /**
+     * Get all boards for this team.
+     *
+     * @return HasMany<Board, $this>
+     */
+    public function boards(): HasMany
+    {
+        return $this->hasMany(Board::class);
+    }
+
+    /**
      * Get the attributes that should be cast.
      *
      * @return array<string, string>

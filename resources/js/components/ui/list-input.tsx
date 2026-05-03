@@ -1,135 +1,185 @@
 import * as React from "react"
-import { GripVertical, ListIcon, Plus, Trash2 } from "lucide-react"
+import { GripVertical, Plus, Trash2 } from "lucide-react"
+import {
+    DndContext,
+    type DragEndEvent,
+    KeyboardSensor,
+    PointerSensor,
+    closestCenter,
+    useSensor,
+    useSensors,
+} from "@dnd-kit/core"
+import {
+    SortableContext,
+    arrayMove,
+    sortableKeyboardCoordinates,
+    useSortable,
+    verticalListSortingStrategy,
+} from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import { Input } from "./input"
 import { Button } from "./button"
 import { cn } from "@/lib/utils"
 
 export interface ListInputProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "value" | "onChange"> {
-  value: string[]
-  onChange: (value: string[]) => void
+    value: string[]
+    onChange: (value: string[]) => void
+}
+
+interface Item {
+    id: string
+    text: string
+}
+
+function SortableRow({
+    item,
+    onEdit,
+    onRemove,
+}: {
+    item: Item
+    onEdit: (text: string) => void
+    onRemove: () => void
+}) {
+    const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
+        id: item.id,
+    })
+
+    const style: React.CSSProperties = {
+        transform: CSS.Transform.toString(transform),
+        transition,
+    }
+
+    return (
+        <div
+            ref={setNodeRef}
+            style={style}
+            className={cn(
+                "flex items-center gap-2 rounded-md bg-background",
+                isDragging && "relative z-10 shadow-lg"
+            )}
+        >
+            <Button
+                type="button"
+                variant="ghost"
+                size="icon"
+                className="cursor-grab touch-none text-muted-foreground hover:text-foreground active:cursor-grabbing"
+                {...attributes}
+                {...listeners}
+            >
+                <GripVertical className="h-4 w-4" />
+            </Button>
+            <Input
+                value={item.text}
+                onChange={(e) => onEdit(e.target.value)}
+                className="flex-1"
+            />
+            <Button
+                type="button"
+                variant="outline"
+                size="icon"
+                onClick={onRemove}
+                className="text-red-500"
+            >
+                <Trash2 />
+            </Button>
+        </div>
+    )
 }
 
 export function ListInput({ value, onChange, className, ...props }: ListInputProps) {
-  const [newItem, setNewItem] = React.useState("")
-  const [draggedIndex, setDraggedIndex] = React.useState<number | null>(null)
+    const dndId = React.useId()
+    const [newItem, setNewItem] = React.useState("")
+    const [items, setItems] = React.useState<Item[]>(() =>
+        value.map((text, i) => ({ id: `${dndId}-i${i}`, text }))
+    )
 
-  const handleAdd = () => {
-    if (newItem.trim()) {
-      onChange([...value, newItem.trim()])
-      setNewItem("")
+    React.useEffect(() => {
+        setItems((prev) => {
+            if (prev.length === value.length && prev.every((item, i) => item.text === value[i])) {
+                return prev
+            }
+            return value.map((text, i) => ({
+                id: prev[i]?.id ?? crypto.randomUUID(),
+                text,
+            }))
+        })
+    }, [value])
+
+    const sensors = useSensors(
+        useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+        useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
+    )
+
+    const commit = (next: Item[]) => {
+        setItems(next)
+        onChange(next.map((item) => item.text))
     }
-  }
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      e.preventDefault()
-      handleAdd()
+    const handleAdd = () => {
+        if (newItem.trim()) {
+            commit([...items, { id: crypto.randomUUID(), text: newItem.trim() }])
+            setNewItem("")
+        }
     }
-  }
 
-  const handleEdit = (index: number, newValue: string) => {
-    const newValues = [...value]
-    newValues[index] = newValue
-    onChange(newValues)
-  }
+    const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") {
+            e.preventDefault()
+            handleAdd()
+        }
+    }
 
-  const handleRemove = (index: number) => {
-    const newValues = [...value]
-    newValues.splice(index, 1)
-    onChange(newValues)
-  }
+    const handleEdit = (id: string, text: string) => {
+        commit(items.map((item) => (item.id === id ? { ...item, text } : item)))
+    }
 
-  const handleDragStart = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    setDraggedIndex(index)
-    e.dataTransfer.effectAllowed = "move"
-    // Required for Firefox
-    e.dataTransfer.setData("text/plain", index.toString())
-  }
+    const handleRemove = (id: string) => {
+        commit(items.filter((item) => item.id !== id))
+    }
 
-  const handleDragOver = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    e.preventDefault()
-    e.dataTransfer.dropEffect = "move"
-  }
+    const handleDragEnd = (event: DragEndEvent) => {
+        const { active, over } = event
+        if (over && active.id !== over.id) {
+            const oldIndex = items.findIndex((item) => item.id === active.id)
+            const newIndex = items.findIndex((item) => item.id === over.id)
+            if (oldIndex !== -1 && newIndex !== -1) {
+                commit(arrayMove(items, oldIndex, newIndex))
+            }
+        }
+    }
 
-  const handleDrop = (e: React.DragEvent<HTMLDivElement>, index: number) => {
-    e.preventDefault()
-    if (draggedIndex === null || draggedIndex === index) return
-
-    const newValues = [...value]
-    const draggedItem = newValues[draggedIndex]
-    
-    newValues.splice(draggedIndex, 1)
-    newValues.splice(index, 0, draggedItem)
-    
-    onChange(newValues)
-    setDraggedIndex(null)
-  }
-
-  const handleDragEnd = () => {
-    setDraggedIndex(null)
-  }
-
-  return (
-    <div className={cn("flex flex-col gap-2", className)} {...props}>
-      <div className="flex flex-col gap-2">
-        {value.map((item, index) => (
-          <div
-            key={index}
-            className={cn(
-              "flex items-center gap-2 rounded-md bg-background transition-colors",
-              draggedIndex === index && "opacity-50"
-            )}
-            draggable
-            onDragStart={(e) => handleDragStart(e, index)}
-            onDragOver={(e) => handleDragOver(e, index)}
-            onDrop={(e) => handleDrop(e, index)}
-            onDragEnd={handleDragEnd}
-          >
-            <Button
-              type="button"
-              variant="ghost"
-              size="icon"
-              className="cursor-grab text-muted-foreground hover:text-foreground active:cursor-grabbing"
+    return (
+        <div className={cn("flex flex-col gap-2", className)} {...props}>
+            <DndContext
+                id={dndId}
+                sensors={sensors}
+                collisionDetection={closestCenter}
+                onDragEnd={handleDragEnd}
             >
-              <GripVertical className="h-4 w-4" />
-            </Button>
+                <SortableContext
+                    items={items.map((item) => item.id)}
+                    strategy={verticalListSortingStrategy}
+                >
+                    <div className="flex flex-col gap-2">
+                        {items.map((item) => (
+                            <SortableRow
+                                key={item.id}
+                                item={item}
+                                onEdit={(text) => handleEdit(item.id, text)}
+                                onRemove={() => handleRemove(item.id)}
+                            />
+                        ))}
+                    </div>
+                </SortableContext>
+            </DndContext>
+
             <Input
-              value={item}
-              onChange={(e) => handleEdit(index, e.target.value)}
-              className="flex-1"
+                placeholder="Add an item..."
+                value={newItem}
+                onChange={(e) => setNewItem(e.target.value)}
+                onKeyDown={handleKeyDown}
+                
             />
-            <Button
-              type="button"
-              variant="outline"
-              size="icon"
-              onClick={() => handleRemove(index)}              
-              className="text-red-500"
-            >
-              <Trash2 />
-            </Button>
-          </div>
-        ))}
-      </div>
-      
-      <div className="flex items-center gap-2">
-        <span className="w-9" />
-        <Input
-          placeholder="Add an item..."
-          value={newItem}
-          onChange={(e) => setNewItem(e.target.value)}
-          onKeyDown={handleKeyDown}
-          className="flex-1"
-        />
-        <Button
-          type="button"
-          variant="outline"
-          size="icon"
-          onClick={handleAdd}
-          disabled={!newItem.trim()}
-        >
-          <Plus />
-        </Button>
-      </div>
-    </div>
-  )
+        </div>
+    )
 }

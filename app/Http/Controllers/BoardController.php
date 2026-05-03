@@ -76,10 +76,9 @@ class BoardController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBoardRequest $request, StoreBoardAction $storeBoardAction)
+    public function store(Team $current_team, StoreBoardRequest $request, StoreBoardAction $storeBoardAction)
     {
         $user = request()->user();
-        $team = $user->current_team;
 
         $name = $request->validated('name');
         $description = $request->validated('description');
@@ -88,7 +87,7 @@ class BoardController extends Controller
         $members = $request->validated('members', []);
 
         $board = $storeBoardAction->execute(
-            $team,
+            $current_team,
             $name,
             $description ?? '',
             $status,
@@ -103,7 +102,7 @@ class BoardController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Board $board, ShowBoardAction $showBoardAction)
+    public function show(Team $current_team, Board $board, ShowBoardAction $showBoardAction)
     {
         if (request()->user()->cannot('view', $board)) {
             abort(403);

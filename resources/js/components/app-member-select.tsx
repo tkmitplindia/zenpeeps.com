@@ -7,6 +7,7 @@ import {
     DropdownMenuContent,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { useInitials } from '@/hooks/use-initials';
 import type { User } from '@/types/auth';
 import { ChevronDown, UsersIcon } from 'lucide-react';
 
@@ -30,34 +31,7 @@ export function AppMemberSelect({
             onChange([...value, id]);
         }
     };
-
-    function selectedMembers() {
-        if (value.length === 0) {
-            return <span>Select members</span>;
-        }
-
-        return (
-            <div className="flex gap-2">
-                {value.map((id) => (
-                    <div className="flex items-center gap-1">
-                        <Avatar key={id}>
-                            <AvatarImage
-                                src={members.find((m) => m.id === id)?.avatar}
-                                alt={members.find((m) => m.id === id)?.name}
-                            />
-                            <AvatarFallback>
-                                {members
-                                    .find((m) => m.id === id)
-                                    ?.name.substring(0, 2)
-                                    .toUpperCase()}
-                            </AvatarFallback>
-                        </Avatar>
-                        <span>{members.find((m) => m.id === id)?.name}</span>
-                    </div>
-                ))}
-            </div>
-        );
-    }
+    const initials = useInitials();
 
     if (variant === 'grid') {
         return (
@@ -65,7 +39,7 @@ export function AppMemberSelect({
                 {members.map((member) => (
                     <div
                         key={member.id}
-                        className="flex items-center space-x-3 rounded-lg border p-3 shadow-xs"
+                        className="flex items-center space-x-3 rounded-lg p-3 hover:bg-sidebar"
                     >
                         <Checkbox
                             id={`member-${member.id}`}
@@ -82,7 +56,7 @@ export function AppMemberSelect({
                                     alt={member.name}
                                 />
                                 <AvatarFallback>
-                                    {member.name.substring(0, 2).toUpperCase()}
+                                    {initials(member.name)}
                                 </AvatarFallback>
                             </Avatar>
                             <span className="text-sm font-medium">
@@ -95,14 +69,44 @@ export function AppMemberSelect({
         );
     }
 
+    function selectedMembers() {
+        if (value.length === 0) {
+            return (
+                <span className="text-muted-foreground">Select members</span>
+            );
+        }
+
+        return (
+            <div className="flex gap-2">
+                {value.map((id) => (
+                    <div key={id} className="flex items-center gap-1">
+                        <Avatar key={id}>
+                            <AvatarImage
+                                src={members.find((m) => m.id === id)?.avatar}
+                                alt={members.find((m) => m.id === id)?.name}
+                            />
+                            <AvatarFallback>
+                                {initials(
+                                    members.find((m) => m.id === id)?.name ??
+                                        '',
+                                )}
+                            </AvatarFallback>
+                        </Avatar>
+                    </div>
+                ))}
+            </div>
+        );
+    }
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
-                <Button variant="outline" className="w-full justify-between">
-                    <div className="flex items-center gap-2">
-                        <UsersIcon className="h-4 w-4" />
-                        <div className="flex gap-2">{selectedMembers()}</div>
-                    </div>
+                <Button
+                    variant="outline"
+                    size="lg"
+                    className="h-full w-full justify-between py-2"
+                >
+                    {selectedMembers()}
                     <ChevronDown className="h-4 w-4 opacity-50" />
                 </Button>
             </DropdownMenuTrigger>

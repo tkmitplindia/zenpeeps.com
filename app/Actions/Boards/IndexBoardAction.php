@@ -25,7 +25,7 @@ final class IndexBoardAction
                 $query->where('status', $status);
             })
             ->orderBy($sort, $order)
-            ->with('members:id,name,avatar_url')
+            ->with('members:id,name,avatar')
             ->withCount('members');
 
         return $query->paginate($limit);
