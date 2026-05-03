@@ -26,7 +26,7 @@ final class IndexBoardAction
             })
             ->orderBy($sort, $order)
             ->with('members:id,name,avatar')
-            ->withCount('members');
+            ->withCount(['members', 'columns', 'items']);
 
         return $query->paginate($limit);
     }

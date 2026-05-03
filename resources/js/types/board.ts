@@ -13,6 +13,10 @@ export type Board = SoftDeletableModel & {
     team: Team;
     creator: User;
     columns: BoardColumn[];
+    members?: User[];
+    members_count?: number;
+    columns_count?: number;
+    items_count?: number;
 };
 
 export type BoardColumn = SoftDeletableModel & {
