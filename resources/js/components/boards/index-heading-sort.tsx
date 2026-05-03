@@ -18,7 +18,7 @@ export function Sort() {
     const { filters, currentTeam } = usePage<BoardIndexPageProps>().props;
     const { sort, order } = filters;
 
-    function DropdownLabel() {
+    function renderDropdownLabel() {
         switch (sort) {
             case 'name':
                 return 'Name';
@@ -33,7 +33,7 @@ export function Sort() {
         }
     }
 
-    function SortIcon() {
+    function renderSortIcon() {
         if (order === 'asc') {
             return <ArrowUpNarrowWideIcon />;
         }
@@ -53,8 +53,8 @@ export function Sort() {
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
                 <Button variant="outline">
-                    <SortIcon />
-                    {DropdownLabel()}
+                    {renderSortIcon()}
+                    {renderDropdownLabel()}
                     <ChevronDownIcon />
                 </Button>
             </DropdownMenuTrigger>
@@ -72,7 +72,7 @@ export function Sort() {
                         }
                     >
                         {sort === 'name' ? (
-                            <SortIcon />
+                            renderSortIcon()
                         ) : (
                             <span className="size-4" />
                         )}
@@ -92,7 +92,7 @@ export function Sort() {
                         }
                     >
                         {sort === 'description' ? (
-                            <SortIcon />
+                            renderSortIcon()
                         ) : (
                             <span className="size-4" />
                         )}
@@ -112,7 +112,7 @@ export function Sort() {
                         }
                     >
                         {sort === 'created_at' ? (
-                            <SortIcon />
+                            renderSortIcon()
                         ) : (
                             <span className="size-4" />
                         )}
@@ -132,7 +132,7 @@ export function Sort() {
                         }
                     >
                         {sort === 'updated_at' ? (
-                            <SortIcon />
+                            renderSortIcon()
                         ) : (
                             <span className="size-4" />
                         )}

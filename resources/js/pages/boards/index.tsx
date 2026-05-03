@@ -10,7 +10,7 @@ import type { BoardIndexPageProps } from '@/types/board';
 export default function BoardsIndexPage() {
     const { view, boards } = usePage<BoardIndexPageProps>().props;
 
-    function BoardsView() {
+    function renderBoardsView() {
         if (boards.total === 0) {
             return <BoardsEmpty />;
         }
@@ -27,7 +27,7 @@ export default function BoardsIndexPage() {
             <Head title="Boards" />
             <div className="space-y-4 p-4">
                 <BoardIndexHeading />
-                <BoardsView />
+                {renderBoardsView()}
             </div>
         </>
     );

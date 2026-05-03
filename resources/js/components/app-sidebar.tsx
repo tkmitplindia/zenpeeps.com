@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { KanbanIcon, LayoutGrid, LayoutGridIcon } from 'lucide-react';
+import { KanbanIcon, LayoutGridIcon } from 'lucide-react';
 import AppLogo from '@/components/app-logo';
 import { NavMain } from '@/components/nav-main';
 import { NavUser } from '@/components/nav-user';
