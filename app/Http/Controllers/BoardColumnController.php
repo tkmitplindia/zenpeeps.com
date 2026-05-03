@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Actions\BoardColumns\DestroyBoardColumnAction;
+use App\Actions\BoardColumns\ReorderBoardColumnsAction;
 use App\Actions\BoardColumns\StoreBoardColumnAction;
 use App\Actions\BoardColumns\UpdateBoardColumnAction;
+use App\Http\Requests\ReorderBoardColumnsRequest;
 use App\Http\Requests\StoreBoardColumnRequest;
 use App\Http\Requests\UpdateBoardColumnRequest;
 use App\Models\Board;
 use App\Models\BoardColumn;
+use App\Models\Team;
 
 class BoardColumnController extends Controller
 {
@@ -47,6 +50,20 @@ class BoardColumnController extends Controller
         $updateBoardColumnAction->execute($boardColumn, $name);
 
         return to_route('boards.show', $boardColumn->board);
+    }
+
+    /**
+     * Persist a new order for a board's columns.
+     */
+    public function reorder(
+        Team $current_team,
+        Board $board,
+        ReorderBoardColumnsRequest $request,
+        ReorderBoardColumnsAction $reorderBoardColumnsAction,
+    ) {
+        $reorderBoardColumnsAction->execute($board, $request->validated('columns'));
+
+        return back();
     }
 
     /**

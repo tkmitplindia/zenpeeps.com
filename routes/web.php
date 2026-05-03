@@ -22,8 +22,10 @@ Route::prefix('{current_team}')
         Route::inertia('dashboard', 'dashboard')->name('dashboard');
 
         Route::resource('boards', BoardController::class);
+        Route::patch('boards/{board}/columns/reorder', [BoardColumnController::class, 'reorder'])
+            ->name('boards.columns.reorder');
         Route::resource('boards.columns', BoardColumnController::class)
-            ->only(['store', 'update', 'destroy', 'reorder'])
+            ->only(['store', 'update', 'destroy'])
             ->scoped(['boardColumn' => 'column']);
 
         Route::resource('boards.items', BoardItemController::class)
