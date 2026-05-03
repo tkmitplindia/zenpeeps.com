@@ -23,7 +23,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property string $id
  * @property string $name
  * @property string $email
- * @property string|null $avatar_url
+ * @property string|null $avatar
  * @property Carbon|null $email_verified_at
  * @property string $password
  * @property string|null $remember_token
@@ -31,7 +31,7 @@ use Laravel\Fortify\TwoFactorAuthenticatable;
  * @property Carbon|null $updated_at
  * @property Carbon|null $deleted_at
  */
-#[Fillable(['name', 'email', 'password', 'avatar_url', 'current_team_id'])]
+#[Fillable(['name', 'email', 'password', 'avatar', 'current_team_id'])]
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable
 {
