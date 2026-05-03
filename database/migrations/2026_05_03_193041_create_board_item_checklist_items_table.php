@@ -1,7 +1,6 @@
 <?php
 
 use App\Models\BoardItem;
-use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -10,11 +9,12 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('board_item_comments', function (Blueprint $table) {
+        Schema::create('board_item_checklist_items', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignIdFor(BoardItem::class)->constrained()->cascadeOnDelete();
-            $table->foreignIdFor(User::class)->constrained()->cascadeOnDelete();
-            $table->text('body');
+            $table->string('name');
+            $table->unsignedInteger('order')->default(0);
+            $table->dateTime('completed_at')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });
@@ -22,6 +22,6 @@ return new class extends Migration
 
     public function down(): void
     {
-        Schema::dropIfExists('board_item_comments');
+        Schema::dropIfExists('board_item_checklist_items');
     }
 };

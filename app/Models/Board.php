@@ -33,10 +33,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property Team $team
  * @property User $creator
  * @property Collection<int, BoardColumn> $columns
+ * @property Collection<int, BoardItem> $items
  *
  * @method BelongsTo<Team> team()
  * @method BelongsTo<User> creator()
  * @method HasMany<BoardColumn> columns()
+ * @method HasMany<BoardItem> items()
  * @method static Builder active()
  * @method static Builder archived()
  * @method static Builder createdBy(User $user)
@@ -76,6 +78,11 @@ class Board extends Model
     public function members(): BelongsToMany
     {
         return $this->belongsToMany(User::class, 'board_members');
+    }
+
+    public function items(): HasMany
+    {
+        return $this->hasMany(BoardItem::class);
     }
 
     #[Scope]

@@ -18,12 +18,10 @@ class BoardColumnFactory extends Factory
      */
     public function definition(): array
     {
-        $board = Board::factory()->create();
-
         return [
             'name' => $this->faker->word,
-            'order' => $board->columns()->count() + 1,
-            'board_id' => $board->id,
+            'order' => 1,
+            'board_id' => Board::factory(),
         ];
     }
 }

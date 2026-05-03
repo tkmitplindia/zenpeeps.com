@@ -2,65 +2,113 @@
 
 namespace App\Http\Controllers;
 
+use App\Actions\BoardItems\DestroyBoardItemAction;
+use App\Actions\BoardItems\ShowBoardItemAction;
+use App\Actions\BoardItems\StoreBoardItemAction;
+use App\Actions\BoardItems\UpdateBoardItemAction;
+use App\Enums\BoardItemPriority;
 use App\Http\Requests\StoreBoardItemRequest;
 use App\Http\Requests\UpdateBoardItemRequest;
+use App\Models\Board;
+use App\Models\BoardColumn;
 use App\Models\BoardItem;
+use App\Models\Team;
 
 class BoardItemController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function create(Team $current_team, Board $board)
     {
-        //
+        $user = request()->user();
+
+        if ($user->cannot('create', [BoardItem::class, $board])) {
+            abort(403);
+        }
+
+        return inertia('boards/items/create', [
+            'board' => $board,
+            'columns' => $board->columns()->orderBy('order')->get(),
+            'members' => $board->members,
+        ]);
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function store(
+        Team $current_team,
+        Board $board,
+        StoreBoardItemRequest $request,
+        StoreBoardItemAction $storeBoardItemAction,
+    ) {
+        $user = $request->user();
+
+        /** @var BoardColumn $column */
+        $column = $board->columns()->findOrFail($request->validated('board_column_id'));
+
+        $item = $storeBoardItemAction->execute(
+            $board,
+            $column,
+            $user,
+            $request->validated('title'),
+            $request->validated('description'),
+            BoardItemPriority::from($request->validated('priority', BoardItemPriority::Medium->value)),
+            $request->validated('estimated_minutes'),
+            $request->validated('due_date'),
+            $request->validated('assignees', []),
+            $request->validated('tags', []),
+        );
+
+        return to_route('boards.items.show', [
+            'current_team' => $current_team,
+            'board' => $board,
+            'item' => $item,
+        ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(StoreBoardItemRequest $request)
-    {
-        //
+    public function show(
+        Team $current_team,
+        Board $board,
+        BoardItem $item,
+        ShowBoardItemAction $showBoardItemAction,
+    ) {
+        if (request()->user()->cannot('view', $item)) {
+            abort(403);
+        }
+
+        $item = $showBoardItemAction->execute($item);
+
+        return inertia('boards/items/show', [
+            'board' => $board,
+            'item' => $item,
+            'columns' => $board->columns()->orderBy('order')->get(),
+            'members' => $board->members,
+        ]);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(BoardItem $boardItem)
-    {
-        //
+    public function update(
+        Team $current_team,
+        Board $board,
+        BoardItem $item,
+        UpdateBoardItemRequest $request,
+        UpdateBoardItemAction $updateBoardItemAction,
+    ) {
+        $updateBoardItemAction->execute($item, $request->validated());
+
+        return back();
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(BoardItem $boardItem)
-    {
-        //
-    }
+    public function destroy(
+        Team $current_team,
+        Board $board,
+        BoardItem $item,
+        DestroyBoardItemAction $destroyBoardItemAction,
+    ) {
+        if (request()->user()->cannot('delete', $item)) {
+            abort(403);
+        }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(UpdateBoardItemRequest $request, BoardItem $boardItem)
-    {
-        //
-    }
+        $destroyBoardItemAction->execute($item);
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(BoardItem $boardItem)
-    {
-        //
+        return to_route('boards.show', [
+            'current_team' => $current_team,
+            'board' => $board,
+        ]);
     }
 }

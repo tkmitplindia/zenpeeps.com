@@ -21,6 +21,7 @@ class BoardFactory extends Factory
             'name' => $this->faker->sentence(),
             'description' => $this->faker->text(),
             'team_id' => TeamFactory::new(),
+            'created_by' => UserFactory::new(),
         ];
     }
 }
