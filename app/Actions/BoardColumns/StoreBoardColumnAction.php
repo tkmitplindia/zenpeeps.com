@@ -11,9 +11,9 @@ final class StoreBoardColumnAction
     public function execute(Board $board, string $name): BoardColumn
     {
         return DB::transaction(function () use ($board, $name) {
-            return BoardColumn::create([
-                'board_id' => $board->id,
+            return $board->columns()->create([
                 'name' => $name,
+                'order' => ($board->columns()->max('order') ?? 0) + 1,
             ]);
         });
     }

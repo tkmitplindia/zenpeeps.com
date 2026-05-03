@@ -2,31 +2,36 @@
 
 namespace App\Http\Requests;
 
+use App\Models\Board;
 use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Validation\Rule;
 
 class StoreBoardColumnRequest extends FormRequest
 {
-    /**
-     * Determine if the user is authorized to make this request.
-     */
     public function authorize(): bool
     {
         $user = request()->user();
-        $board = request()->route('board');
+        $board = $this->route('board');
 
-        return $user->can('update', $board);
+        return $board instanceof Board && $user->can('update', $board);
     }
 
     /**
-     * Get the validation rules that apply to the request.
-     *
      * @return array<string, ValidationRule|array<mixed>|string>
      */
     public function rules(): array
     {
+        /** @var Board $board */
+        $board = $this->route('board');
+
         return [
-            'name' => 'required|max:255|unique:board_columns,name',
+            'name' => [
+                'required',
+                'string',
+                'max:255',
+                Rule::unique('board_columns', 'name')->where('board_id', $board->id),
+            ],
         ];
     }
 }

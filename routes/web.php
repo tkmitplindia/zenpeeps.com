@@ -25,7 +25,7 @@ Route::prefix('{current_team}')
         Route::patch('boards/{board}/columns/reorder', [BoardColumnController::class, 'reorder'])
             ->name('boards.columns.reorder');
         Route::resource('boards.columns', BoardColumnController::class)
-            ->only(['store', 'update', 'destroy'])
+            ->only(['create', 'store', 'update', 'destroy'])
             ->scoped(['boardColumn' => 'column']);
 
         Route::patch('boards/{board}/items/reorder', [BoardItemController::class, 'reorder'])

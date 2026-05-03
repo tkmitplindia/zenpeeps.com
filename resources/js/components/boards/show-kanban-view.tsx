@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { router, usePage } from '@inertiajs/react';
+import { Link, router, usePage } from '@inertiajs/react';
 import {
     DndContext,
     type DragEndEvent,
@@ -16,7 +16,10 @@ import {
 } from '@dnd-kit/sortable';
 import { PlusIcon } from 'lucide-react';
 import { useCurrentTeam } from '@/hooks/use-current-team';
-import { reorder as reorderColumns } from '@/routes/boards/columns';
+import {
+    create as createColumn,
+    reorder as reorderColumns,
+} from '@/routes/boards/columns';
 import { reorder as reorderItems } from '@/routes/boards/items';
 import type { BoardColumn, BoardItem, BoardShowPageProps } from '@/types/board';
 import { Button } from '../ui/button';
@@ -189,9 +192,23 @@ export function ShowBoardKanbanView() {
                         />
                     ))}
 
-                    <Button variant="secondary" size="lg" className="w-80">
-                        <PlusIcon />
-                        Add another column
+                    <Button
+                        variant="secondary"
+                        size="lg"
+                        className="w-80"
+                        asChild
+                    >
+                        <Link
+                            href={
+                                createColumn({
+                                    current_team: currentTeam.slug,
+                                    board: board.id,
+                                }).url
+                            }
+                        >
+                            <PlusIcon />
+                            Add another column
+                        </Link>
                     </Button>
                 </div>
             </SortableContext>

@@ -35,7 +35,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @method static Builder last()
  * @method static Builder first()
  */
-#[Fillable(['board_id', 'name'])]
+#[Fillable(['board_id', 'name', 'order'])]
 class BoardColumn extends Model
 {
     /** @use HasFactory<BoardColumnFactory> */

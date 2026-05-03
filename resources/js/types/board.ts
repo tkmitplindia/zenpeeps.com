@@ -82,19 +82,6 @@ export type BoardItemChecklistItem = SoftDeletableModel & {
     completed_at: string | null;
 };
 
-export type BoardItemShowPageProps = {
-    board: Board;
-    item: BoardItem;
-    columns: BoardColumn[];
-    members: User[];
-};
-
-export type BoardItemCreatePageProps = {
-    board: Board;
-    columns: BoardColumn[];
-    members: User[];
-};
-
 export type BoardIndexPageProps = {
     boards: PaginatedResponse<Board>;
     filters: {
@@ -125,4 +112,21 @@ export type BoardCreatePageProps = {
 export type BoardEditPageProps = {
     board: Board;
     members: User[];
+};
+
+export type BoardItemShowPageProps = {
+    board: Board;
+    item: BoardItem;
+    columns: BoardColumn[];
+    members: User[];
+};
+
+export type BoardItemCreatePageProps = {
+    board: Board;
+    columns: BoardColumn[];
+    members: User[];
+};
+
+export type BoardColumnCreatePageProps = {
+    board: Board;
 };

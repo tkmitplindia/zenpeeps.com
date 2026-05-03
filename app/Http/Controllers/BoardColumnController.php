@@ -16,28 +16,34 @@ use App\Models\Team;
 class BoardColumnController extends Controller
 {
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating a new column.
      */
-    public function create(Board $board)
+    public function create(Team $current_team, Board $board)
     {
-        if (request()->user()->cannot('create', $board)) {
+        if (request()->user()->cannot('update', $board)) {
             abort(403);
         }
 
-        // Typically handled via modal on the board show page
-        return back();
+        return inertia('boards/columns/create', [
+            'board' => $board,
+        ]);
     }
 
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreBoardColumnRequest $request, Board $board, StoreBoardColumnAction $storeBoardColumnAction)
-    {
-        $name = $request->validated('name');
+    public function store(
+        Team $current_team,
+        Board $board,
+        StoreBoardColumnRequest $request,
+        StoreBoardColumnAction $storeBoardColumnAction,
+    ) {
+        $storeBoardColumnAction->execute($board, $request->validated('name'));
 
-        $storeBoardColumnAction->execute($board, $name);
-
-        return redirect()->back();
+        return to_route('boards.show', [
+            'current_team' => $current_team,
+            'board' => $board,
+        ]);
     }
 
     /**
