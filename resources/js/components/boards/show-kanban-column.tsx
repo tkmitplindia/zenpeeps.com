@@ -1,8 +1,13 @@
 import { Link } from '@inertiajs/react';
-import { useSortable } from '@dnd-kit/sortable';
+import { useDroppable } from '@dnd-kit/core';
+import {
+    SortableContext,
+    useSortable,
+    verticalListSortingStrategy,
+} from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { GripVerticalIcon, KanbanIcon, PlusIcon } from 'lucide-react';
-import type { BoardColumn } from '@/types/board';
+import type { BoardColumn, BoardItem } from '@/types/board';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { create } from '@/routes/boards/items';
 import { Button } from '../ui/button';
@@ -16,14 +21,23 @@ import {
 } from '../ui/empty';
 import { ShowBoardKanbanCard } from './show-kanban-card';
 
-export function ShowBoardKanbanColumn({ column }: { column: BoardColumn }) {
+export function ShowBoardKanbanColumn({
+    column,
+    items,
+}: {
+    column: BoardColumn;
+    items: BoardItem[];
+}) {
     const currentTeam = useCurrentTeam();
-    const items = column.items ?? [];
     const createUrl = create({
         current_team: currentTeam.slug,
         board: column.board_id,
     }).url;
 
+    const sortable = useSortable({
+        id: column.id,
+        data: { type: 'column' },
+    });
     const {
         attributes,
         listeners,
@@ -31,7 +45,14 @@ export function ShowBoardKanbanColumn({ column }: { column: BoardColumn }) {
         transform,
         transition,
         isDragging,
-    } = useSortable({ id: column.id });
+    } = sortable;
+
+    // Droppable for items so cross-column drops land even when the column is
+    // empty (no item to hover over).
+    const { setNodeRef: setItemDropRef } = useDroppable({
+        id: column.id,
+        data: { type: 'column-droppable' },
+    });
 
     return (
         <div
@@ -76,33 +97,41 @@ export function ShowBoardKanbanColumn({ column }: { column: BoardColumn }) {
                 </div>
             </div>
 
-            {items.length === 0 ? (
-                <Empty>
-                    <EmptyHeader>
-                        <EmptyMedia>
-                            <KanbanIcon />
-                        </EmptyMedia>
-                        <EmptyTitle>No items yet</EmptyTitle>
-                        <EmptyDescription>
-                            Add items to this column to get started
-                        </EmptyDescription>
-                    </EmptyHeader>
-                    <EmptyContent>
-                        <Button variant="secondary" asChild>
-                            <Link href={createUrl}>
-                                <PlusIcon />
-                                Add item
-                            </Link>
-                        </Button>
-                    </EmptyContent>
-                </Empty>
-            ) : (
-                <div className="flex flex-col gap-2">
-                    {items.map((item) => (
-                        <ShowBoardKanbanCard key={item.id} item={item} />
-                    ))}
+            <SortableContext
+                items={items.map((i) => i.id)}
+                strategy={verticalListSortingStrategy}
+            >
+                <div
+                    ref={setItemDropRef}
+                    className="flex min-h-12 flex-col gap-2"
+                >
+                    {items.length === 0 ? (
+                        <Empty>
+                            <EmptyHeader>
+                                <EmptyMedia>
+                                    <KanbanIcon />
+                                </EmptyMedia>
+                                <EmptyTitle>No items yet</EmptyTitle>
+                                <EmptyDescription>
+                                    Add items to this column to get started
+                                </EmptyDescription>
+                            </EmptyHeader>
+                            <EmptyContent>
+                                <Button variant="secondary" asChild>
+                                    <Link href={createUrl}>
+                                        <PlusIcon />
+                                        Add item
+                                    </Link>
+                                </Button>
+                            </EmptyContent>
+                        </Empty>
+                    ) : (
+                        items.map((item) => (
+                            <ShowBoardKanbanCard key={item.id} item={item} />
+                        ))
+                    )}
                 </div>
-            )}
+            </SortableContext>
         </div>
     );
 }

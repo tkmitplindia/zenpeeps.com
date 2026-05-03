@@ -1,4 +1,6 @@
 import { Link } from '@inertiajs/react';
+import { useSortable } from '@dnd-kit/sortable';
+import { CSS } from '@dnd-kit/utilities';
 import { CalendarIcon, FlagIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useCurrentTeam } from '@/hooks/use-current-team';
@@ -26,8 +28,18 @@ export function ShowBoardKanbanCard({ item }: { item: BoardItem }) {
     const tags = item.tags ?? [];
     const assignees = item.assignees ?? [];
 
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        transition,
+        isDragging,
+    } = useSortable({ id: item.id, data: { type: 'item' } });
+
     return (
         <Link
+            ref={setNodeRef}
             href={
                 show({
                     current_team: currentTeam.slug,
@@ -35,7 +47,15 @@ export function ShowBoardKanbanCard({ item }: { item: BoardItem }) {
                     item: item.id,
                 }).url
             }
-            className="flex flex-col gap-2 rounded-lg border bg-card p-3 text-left shadow-sm transition-colors hover:bg-accent"
+            draggable={false}
+            style={{
+                transform: CSS.Transform.toString(transform),
+                transition,
+                opacity: isDragging ? 0.4 : 1,
+            }}
+            className="flex touch-none flex-col gap-2 rounded-lg border bg-card p-3 text-left shadow-sm transition-colors hover:bg-accent active:cursor-grabbing"
+            {...attributes}
+            {...listeners}
         >
             <div className="flex items-start justify-between gap-2">
                 <div className="flex-1">

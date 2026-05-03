@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Actions\BoardItems\DestroyBoardItemAction;
+use App\Actions\BoardItems\ReorderBoardItemsAction;
 use App\Actions\BoardItems\ShowBoardItemAction;
 use App\Actions\BoardItems\StoreBoardItemAction;
 use App\Actions\BoardItems\UpdateBoardItemAction;
 use App\Enums\BoardItemPriority;
+use App\Http\Requests\ReorderBoardItemsRequest;
 use App\Http\Requests\StoreBoardItemRequest;
 use App\Http\Requests\UpdateBoardItemRequest;
 use App\Models\Board;
@@ -90,6 +92,17 @@ class BoardItemController extends Controller
         UpdateBoardItemAction $updateBoardItemAction,
     ) {
         $updateBoardItemAction->execute($item, $request->validated());
+
+        return back();
+    }
+
+    public function reorder(
+        Team $current_team,
+        Board $board,
+        ReorderBoardItemsRequest $request,
+        ReorderBoardItemsAction $reorderBoardItemsAction,
+    ) {
+        $reorderBoardItemsAction->execute($board, $request->validated('columns'));
 
         return back();
     }

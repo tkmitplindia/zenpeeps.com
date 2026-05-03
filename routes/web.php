@@ -28,6 +28,8 @@ Route::prefix('{current_team}')
             ->only(['store', 'update', 'destroy'])
             ->scoped(['boardColumn' => 'column']);
 
+        Route::patch('boards/{board}/items/reorder', [BoardItemController::class, 'reorder'])
+            ->name('boards.items.reorder');
         Route::resource('boards.items', BoardItemController::class)
             ->only(['create', 'store', 'show', 'update', 'destroy'])
             ->scoped(['item' => 'id']);
