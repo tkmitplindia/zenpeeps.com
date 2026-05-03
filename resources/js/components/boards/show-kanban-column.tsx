@@ -105,31 +105,9 @@ export function ShowBoardKanbanColumn({
                     ref={setItemDropRef}
                     className="flex min-h-12 flex-col gap-2"
                 >
-                    {items.length === 0 ? (
-                        <Empty>
-                            <EmptyHeader>
-                                <EmptyMedia>
-                                    <KanbanIcon />
-                                </EmptyMedia>
-                                <EmptyTitle>No items yet</EmptyTitle>
-                                <EmptyDescription>
-                                    Add items to this column to get started
-                                </EmptyDescription>
-                            </EmptyHeader>
-                            <EmptyContent>
-                                <Button variant="secondary" asChild>
-                                    <Link href={createUrl}>
-                                        <PlusIcon />
-                                        Add item
-                                    </Link>
-                                </Button>
-                            </EmptyContent>
-                        </Empty>
-                    ) : (
-                        items.map((item) => (
-                            <ShowBoardKanbanCard key={item.id} item={item} />
-                        ))
-                    )}
+                    {items.map((item) => (
+                        <ShowBoardKanbanCard key={item.id} item={item} />
+                    ))}
                 </div>
             </SortableContext>
         </div>
