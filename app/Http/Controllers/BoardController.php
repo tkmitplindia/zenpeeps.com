@@ -108,10 +108,23 @@ class BoardController extends Controller
             abort(403);
         }
 
+        $search = request('search');
+        $sort = request('sort', 'name');
+        $order = request('order', 'asc');
+        $view = request('view', 'grid');
+
         $board = $showBoardAction->execute($board);
 
         return inertia('boards/show', [
             'board' => $board,
+            'members' => $board->members,
+            'columns' => $board->columns,
+            'filters' => [
+                'search' => $search,
+                'sort' => $sort,
+                'order' => $order,
+            ],
+            'view' => $view,
         ]);
     }
 

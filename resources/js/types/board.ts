@@ -37,6 +37,12 @@ export type BoardShowPageProps = {
     board: Board;
     members: User[];
     columns: BoardColumn[];
+    filters: {
+        search?: string;
+        sort: string;
+        order: string;
+    };
+    view: 'grid' | 'list';
 };
 
 export type BoardCreatePageProps = {
