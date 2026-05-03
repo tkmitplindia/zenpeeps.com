@@ -66,10 +66,10 @@ class BoardController extends Controller
             abort(403);
         }
 
-        $teamMembers = $user->current_team->members;
+        $team_members = $user->currentTeam->members;
 
         return inertia('boards/create', [
-            'teamMembers' => $teamMembers,
+            'team_members' => $team_members,
         ]);
     }
 

@@ -40,7 +40,7 @@ export type BoardShowPageProps = {
 };
 
 export type BoardCreatePageProps = {
-    members: User[];
+    team_members: User[];
 };
 
 export type BoardEditPageProps = {
