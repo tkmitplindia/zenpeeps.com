@@ -43,7 +43,7 @@ class BoardController extends Controller
         );
 
         return inertia('boards/index', [
-            'data' => $data,
+            'boards' => $data,
             'filters' => [
                 'search' => $search,
                 'status' => $status,
