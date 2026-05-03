@@ -21,12 +21,9 @@ class BoardPolicy
     public function view(User $user, Board $board): bool
     {
         $team = $board->team;
+
         if ($team === null) {
             return false;
-        }
-
-        if ($team->isPersonal()) {
-            return $user->id === $team->owner()?->id;
         }
 
         return $board->members()->where('user_id', $user->id)->exists();
@@ -46,12 +43,9 @@ class BoardPolicy
     public function update(User $user, Board $board): bool
     {
         $team = $board->team;
+
         if ($team === null) {
             return false;
-        }
-
-        if ($team->isPersonal()) {
-            return $user->id === $team->owner()?->id;
         }
 
         return $board->members()->where('user_id', $user->id)->exists();
@@ -63,12 +57,9 @@ class BoardPolicy
     public function delete(User $user, Board $board): bool
     {
         $team = $board->team;
+
         if ($team === null) {
             return false;
-        }
-
-        if ($team->isPersonal()) {
-            return $user->id === $team->owner()?->id;
         }
 
         return $board->members()->where('user_id', $user->id)->exists();
@@ -80,12 +71,9 @@ class BoardPolicy
     public function restore(User $user, Board $board): bool
     {
         $team = $board->team;
+
         if ($team === null) {
             return false;
-        }
-
-        if ($team->isPersonal()) {
-            return $user->id === $team->owner()?->id;
         }
 
         return $board->members()->where('user_id', $user->id)->exists();
@@ -97,12 +85,9 @@ class BoardPolicy
     public function forceDelete(User $user, Board $board): bool
     {
         $team = $board->team;
+
         if ($team === null) {
             return false;
-        }
-
-        if ($team->isPersonal()) {
-            return $user->id === $team->owner()?->id;
         }
 
         return $board->members()->where('user_id', $user->id)->exists();
