@@ -103,8 +103,7 @@ export function AppMemberSelect({
             <DropdownMenuTrigger asChild>
                 <Button
                     variant="outline"
-                    size="lg"
-                    className="h-full w-full justify-between py-2"
+                    className="h-full w-full justify-between"
                 >
                     {selectedMembers()}
                     <ChevronDown className="h-4 w-4 opacity-50" />
@@ -118,13 +117,13 @@ export function AppMemberSelect({
                         onCheckedChange={() => toggleMember(member.id)}
                         className="flex items-center gap-3"
                     >
-                        <Avatar className="h-6 w-6">
+                        <Avatar>
                             <AvatarImage
                                 src={member.avatar}
                                 alt={member.name}
                             />
                             <AvatarFallback>
-                                {member.name.substring(0, 2).toUpperCase()}
+                                {initials(member.name)}
                             </AvatarFallback>
                         </Avatar>
                         <span>{member.name}</span>

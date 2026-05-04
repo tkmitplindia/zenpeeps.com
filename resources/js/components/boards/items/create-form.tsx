@@ -1,5 +1,6 @@
 import { usePage } from '@inertiajs/react';
-import { useEffect } from 'react';
+import { XIcon } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { AppMemberSelect } from '@/components/app-member-select';
 import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
@@ -34,12 +35,33 @@ export function CreateBoardItemForm() {
     const currentTeam = useCurrentTeam();
     const form = useBoardItemCreateForm(columns[0]?.id ?? '');
     const { data, setData, post, processing, errors } = form;
+    const [tagDraft, setTagDraft] = useState('');
 
     useEffect(() => {
         if (data.board_column_id === '' && columns[0]) {
             setData('board_column_id', columns[0].id);
         }
     }, [columns, data.board_column_id, setData]);
+
+    const onAddTag = () => {
+        const next = tagDraft.trim();
+
+        if (next === '' || data.tags.includes(next)) {
+            setTagDraft('');
+
+            return;
+        }
+
+        setData('tags', [...data.tags, next]);
+        setTagDraft('');
+    };
+
+    const onRemoveTag = (name: string) => {
+        setData(
+            'tags',
+            data.tags.filter((t) => t !== name),
+        );
+    };
 
     return (
         <div className="space-y-6">
@@ -122,6 +144,42 @@ export function CreateBoardItemForm() {
                     variant="dropdown"
                 />
                 <InputError message={errors.assignees} />
+            </div>
+
+            <div className="grid gap-2">
+                <Label htmlFor="tags">Tags</Label>
+                <div className="flex flex-wrap gap-2 rounded-md border p-2">
+                    {data.tags.map((name) => (
+                        <span
+                            key={name}
+                            className="inline-flex items-center gap-1 rounded bg-secondary px-2 py-1 text-xs"
+                        >
+                            {name}
+                            <button
+                                type="button"
+                                onClick={() => onRemoveTag(name)}
+                                aria-label={`Remove ${name}`}
+                            >
+                                <XIcon className="size-3" />
+                            </button>
+                        </span>
+                    ))}
+                    <input
+                        id="tags"
+                        value={tagDraft}
+                        onChange={(e) => setTagDraft(e.target.value)}
+                        onKeyDown={(e) => {
+                            if (e.key === 'Enter') {
+                                e.preventDefault();
+                                onAddTag();
+                            }
+                        }}
+                        onBlur={onAddTag}
+                        placeholder="Add a tag..."
+                        className="flex-1 bg-transparent text-sm outline-none"
+                    />
+                </div>
+                <InputError message={errors.tags} />
             </div>
 
             <div className="flex items-center justify-end gap-4 border-t pt-6">
