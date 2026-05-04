@@ -1,3 +1,4 @@
+import { usePage } from '@inertiajs/react';
 import {
     ArchiveIcon,
     MoreVerticalIcon,
@@ -5,6 +6,7 @@ import {
     PlusIcon,
     TrashIcon,
 } from 'lucide-react';
+import type { BoardShowPageProps } from '@/types/board';
 import { Button } from '../ui/button';
 import {
     DropdownMenu,
@@ -14,8 +16,12 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
+import { useBoardDialog } from './board-delete-dialog-provider';
 
 export function BoardShowHeadingMenu() {
+    const { board } = usePage<BoardShowPageProps>().props;
+    const { confirmDelete } = useBoardDialog();
+
     return (
         <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -42,7 +48,10 @@ export function BoardShowHeadingMenu() {
                         Archive Board
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
-                    <DropdownMenuItem className="text-destructive">
+                    <DropdownMenuItem
+                        onSelect={() => confirmDelete(board)}
+                        className="text-destructive"
+                    >
                         <TrashIcon className="text-destructive" /> Delete Board
                     </DropdownMenuItem>
                 </DropdownMenuGroup>

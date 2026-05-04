@@ -8,6 +8,7 @@ use App\Actions\Boards\ShowBoardAction;
 use App\Actions\Boards\StoreBoardAction;
 use App\Actions\Boards\UpdateBoardAction;
 use App\Enums\BoardStatus;
+use App\Http\Requests\BoardDestroyRequest;
 use App\Http\Requests\StoreBoardRequest;
 use App\Http\Requests\UpdateBoardRequest;
 use App\Models\Board;
@@ -170,14 +171,12 @@ class BoardController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Board $board, DestroyBoardAction $destroyBoardAction)
+    public function destroy(BoardDestroyRequest $request, Team $current_team, Board $board, DestroyBoardAction $destroyBoardAction)
     {
-        if (request()->user()->cannot('delete', $board)) {
-            abort(403);
-        }
+        $request->validated();
 
         $destroyBoardAction->execute($board);
 
-        return to_route('boards.index');
+        return to_route('boards.index', ['current_team' => $current_team]);
     }
 }

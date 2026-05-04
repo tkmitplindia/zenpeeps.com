@@ -1,4 +1,5 @@
 import { usePage } from '@inertiajs/react';
+import { BoardDeleteDialogProvider } from '@/components/boards/board-delete-dialog-provider';
 import { ShowBoardHeading } from '@/components/boards/show-heading';
 import { ShowBoardKanbanView } from '@/components/boards/show-kanban-view';
 import { ShowBoardListView } from '@/components/boards/show-list-view';
@@ -10,12 +11,14 @@ export default function ShowBoardPage() {
     const { view } = usePage<BoardShowPageProps>().props;
 
     return (
-        <div className="flex h-full flex-col gap-8 p-8">
-            <ShowBoardHeading />
+        <BoardDeleteDialogProvider>
+            <div className="flex h-full flex-col gap-8 p-8">
+                <ShowBoardHeading />
 
-            {view === 'grid' && <ShowBoardKanbanView />}
-            {view === 'list' && <ShowBoardListView />}
-        </div>
+                {view === 'grid' && <ShowBoardKanbanView />}
+                {view === 'list' && <ShowBoardListView />}
+            </div>
+        </BoardDeleteDialogProvider>
     );
 }
 
