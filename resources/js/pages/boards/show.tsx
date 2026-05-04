@@ -1,6 +1,7 @@
 import { usePage } from '@inertiajs/react';
 import { ShowBoardHeading } from '@/components/boards/show-heading';
 import { ShowBoardKanbanView } from '@/components/boards/show-kanban-view';
+import { ShowBoardListView } from '@/components/boards/show-list-view';
 import { index, show } from '@/routes/boards';
 import type { Team } from '@/types';
 import type { Board, BoardShowPageProps } from '@/types/board';
@@ -13,11 +14,7 @@ export default function ShowBoardPage() {
             <ShowBoardHeading />
 
             {view === 'grid' && <ShowBoardKanbanView />}
-            {view === 'list' && (
-                <div className="flex h-full items-center justify-center text-muted-foreground">
-                    List view is not implemented yet.
-                </div>
-            )}
+            {view === 'list' && <ShowBoardListView />}
         </div>
     );
 }

@@ -1,7 +1,7 @@
 import { DndContext, DragOverlay } from '@dnd-kit/core';
 import {
     SortableContext,
-    horizontalListSortingStrategy,
+    verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { Link, usePage } from '@inertiajs/react';
 import { PlusIcon } from 'lucide-react';
@@ -10,10 +10,10 @@ import { useCurrentTeam } from '@/hooks/use-current-team';
 import { create as createColumn } from '@/routes/boards/columns';
 import type { BoardShowPageProps } from '@/types/board';
 import { Button } from '../ui/button';
-import { ShowBoardKanbanCard } from './show-kanban-card';
-import { ShowBoardKanbanColumn } from './show-kanban-column';
+import { ShowBoardListRow } from './show-list-row';
+import { ShowBoardListSection } from './show-list-section';
 
-export function ShowBoardKanbanView() {
+export function ShowBoardListView() {
     const { board } = usePage<BoardShowPageProps>().props;
     const currentTeam = useCurrentTeam();
     const dnd = useBoardDnd();
@@ -29,23 +29,18 @@ export function ShowBoardKanbanView() {
         >
             <SortableContext
                 items={dnd.local.map((c) => c.id)}
-                strategy={horizontalListSortingStrategy}
+                strategy={verticalListSortingStrategy}
             >
-                <div className="flex gap-6 overflow-x-auto pb-4">
+                <div className="flex flex-col gap-8 pb-4">
                     {dnd.local.map((c) => (
-                        <ShowBoardKanbanColumn
+                        <ShowBoardListSection
                             key={c.id}
                             column={c.column}
                             items={c.items}
                         />
                     ))}
 
-                    <Button
-                        variant="secondary"
-                        size="lg"
-                        className="w-80"
-                        asChild
-                    >
+                    <Button variant="secondary" asChild>
                         <Link
                             href={
                                 createColumn({
@@ -63,9 +58,9 @@ export function ShowBoardKanbanView() {
 
             <DragOverlay dropAnimation={null}>
                 {dnd.activeItem ? (
-                    <ShowBoardKanbanCard item={dnd.activeItem} overlay />
+                    <ShowBoardListRow item={dnd.activeItem} overlay />
                 ) : dnd.activeColumn ? (
-                    <ShowBoardKanbanColumn
+                    <ShowBoardListSection
                         column={dnd.activeColumn.column}
                         items={dnd.activeColumn.items}
                         overlay
