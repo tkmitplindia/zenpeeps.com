@@ -5,6 +5,7 @@ import {
 } from '@dnd-kit/sortable';
 import { Link, usePage } from '@inertiajs/react';
 import { PlusIcon } from 'lucide-react';
+import { useId } from 'react';
 import { useBoardDnd } from '@/hooks/use-board-dnd';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { create as createColumn } from '@/routes/boards/columns';
@@ -17,9 +18,11 @@ export function ShowBoardListView() {
     const { board } = usePage<BoardShowPageProps>().props;
     const currentTeam = useCurrentTeam();
     const dnd = useBoardDnd();
+    const dndId = useId();
 
     return (
         <DndContext
+            id={dndId}
             sensors={dnd.sensors}
             collisionDetection={dnd.collisionDetection}
             onDragStart={dnd.onDragStart}
