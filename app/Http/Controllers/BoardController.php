@@ -138,8 +138,11 @@ class BoardController extends Controller
             abort(403);
         }
 
+        $board->load('members:id,name,avatar');
+
         return inertia('boards/edit', [
             'board' => $board,
+            'team_members' => $current_team->members,
         ]);
     }
 

@@ -38,6 +38,18 @@ test('a board member can archive a board via update', function () {
     expect($board->fresh()->status)->toBe(BoardStatus::Archived);
 });
 
+test('the edit page renders for a board member with team_members and the board', function () {
+    [$user, $team, $board] = setUpBoardForUpdate();
+
+    $this->actingAs($user)
+        ->get(route('boards.edit', ['current_team' => $team, 'board' => $board]))
+        ->assertOk()
+        ->assertInertia(fn ($page) => $page
+            ->component('boards/edit')
+            ->where('board.id', $board->id)
+            ->has('team_members'));
+});
+
 test('a non-member cannot update a board', function () {
     [, $team, $board] = setUpBoardForUpdate();
     $stranger = User::factory()->create();

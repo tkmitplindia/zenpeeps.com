@@ -115,7 +115,7 @@ export type BoardCreatePageProps = {
 
 export type BoardEditPageProps = {
     board: Board;
-    members: User[];
+    team_members: User[];
 };
 
 export type BoardItemShowPageProps = {
