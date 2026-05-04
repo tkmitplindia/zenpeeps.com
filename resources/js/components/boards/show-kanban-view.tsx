@@ -11,6 +11,7 @@ import { useCurrentTeam } from '@/hooks/use-current-team';
 import { create as createColumn } from '@/routes/boards/columns';
 import type { BoardShowPageProps } from '@/types/board';
 import { Button } from '../ui/button';
+import { ScrollArea } from '../ui/scroll-area';
 import { ShowBoardKanbanCard } from './show-kanban-card';
 import { ShowBoardKanbanColumn } from './show-kanban-column';
 
@@ -34,34 +35,36 @@ export function ShowBoardKanbanView() {
                 items={dnd.local.map((c) => c.id)}
                 strategy={horizontalListSortingStrategy}
             >
-                <div className="flex gap-6 overflow-x-auto pb-4">
-                    {dnd.local.map((c) => (
-                        <ShowBoardKanbanColumn
-                            key={c.id}
-                            column={c.column}
-                            items={c.items}
-                        />
-                    ))}
+                <ScrollArea orientation="horizontal" className="min-h-0 flex-1">
+                    <div className="flex gap-6 pb-4">
+                        {dnd.local.map((c) => (
+                            <ShowBoardKanbanColumn
+                                key={c.id}
+                                column={c.column}
+                                items={c.items}
+                            />
+                        ))}
 
-                    <Button
-                        variant="secondary"
-                        size="lg"
-                        className="w-80"
-                        asChild
-                    >
-                        <Link
-                            href={
-                                createColumn({
-                                    current_team: currentTeam.slug,
-                                    board: board.id,
-                                }).url
-                            }
+                        <Button
+                            variant="secondary"
+                            size="lg"
+                            className="w-80"
+                            asChild
                         >
-                            <PlusIcon />
-                            Add another column
-                        </Link>
-                    </Button>
-                </div>
+                            <Link
+                                href={
+                                    createColumn({
+                                        current_team: currentTeam.slug,
+                                        board: board.id,
+                                    }).url
+                                }
+                            >
+                                <PlusIcon />
+                                Add another column
+                            </Link>
+                        </Button>
+                    </div>
+                </ScrollArea>
             </SortableContext>
 
             <DragOverlay dropAnimation={null}>
