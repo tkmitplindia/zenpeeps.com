@@ -146,12 +146,8 @@ class BoardController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(UpdateBoardRequest $request, Board $board, UpdateBoardAction $updateBoardAction)
+    public function update(UpdateBoardRequest $request, Team $current_team, Board $board, UpdateBoardAction $updateBoardAction)
     {
-        if (request()->user()->cannot('update', $board)) {
-            abort(403);
-        }
-
         $name = $request->validated('name');
         $description = $request->validated('description');
         $status = $request->validated('status', BoardStatus::Active->value);
@@ -165,7 +161,10 @@ class BoardController extends Controller
             $members
         );
 
-        return to_route('boards.show', $board);
+        return to_route('boards.show', [
+            'current_team' => $current_team,
+            'board' => $board,
+        ]);
     }
 
     /**
