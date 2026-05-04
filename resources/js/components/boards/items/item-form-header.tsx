@@ -1,4 +1,3 @@
-import { router } from '@inertiajs/react';
 import { MoreVerticalIcon, Trash2Icon } from 'lucide-react';
 import { useState } from 'react';
 import { Button } from '@/components/ui/button';
@@ -9,13 +8,12 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { useBoardItemPatch } from '@/hooks/use-board-item-form';
-import { useCurrentTeam } from '@/hooks/use-current-team';
-import { destroy } from '@/routes/boards/items';
 import type { BoardItem } from '@/types/board';
+import { useBoardItemDialog } from './board-item-delete-dialog-provider';
 
 export function ItemFormHeader({ item }: { item: BoardItem }) {
     const patch = useBoardItemPatch(item);
-    const currentTeam = useCurrentTeam();
+    const { confirmDelete } = useBoardItemDialog();
     const [title, setTitle] = useState(item.title);
 
     const commit = () => {
@@ -24,20 +22,6 @@ export function ItemFormHeader({ item }: { item: BoardItem }) {
         }
 
         patch({ title: title.trim() });
-    };
-
-    const onDelete = () => {
-        if (!confirm('Delete this task?')) {
-            return;
-        }
-
-        router.delete(
-            destroy({
-                current_team: currentTeam.slug,
-                board: item.board_id,
-                item: item.id,
-            }).url,
-        );
     };
 
     return (
@@ -68,7 +52,7 @@ export function ItemFormHeader({ item }: { item: BoardItem }) {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                     <DropdownMenuItem
-                        onSelect={onDelete}
+                        onSelect={() => confirmDelete(item)}
                         className="text-destructive"
                     >
                         <Trash2Icon className="mr-2 size-4" /> Delete task

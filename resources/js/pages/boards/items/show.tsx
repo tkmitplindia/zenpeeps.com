@@ -1,4 +1,5 @@
 import { Head, usePage } from '@inertiajs/react';
+import { BoardItemDeleteDialogProvider } from '@/components/boards/items/board-item-delete-dialog-provider';
 import { ItemForm } from '@/components/boards/items/item-form';
 import { useFlashToast } from '@/hooks/use-flash-toast';
 import { index, show as showBoard } from '@/routes/boards';
@@ -11,10 +12,12 @@ export default function ShowBoardItemPage() {
     const { item } = usePage<BoardItemShowPageProps>().props;
 
     return (
-        <div className="p-8">
-            <Head title={`Task #${item.number} – ${item.title}`} />
-            <ItemForm />
-        </div>
+        <BoardItemDeleteDialogProvider>
+            <div className="p-8">
+                <Head title={`Task #${item.number} – ${item.title}`} />
+                <ItemForm />
+            </div>
+        </BoardItemDeleteDialogProvider>
     );
 }
 

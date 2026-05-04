@@ -8,6 +8,7 @@ use App\Actions\BoardItems\ShowBoardItemAction;
 use App\Actions\BoardItems\StoreBoardItemAction;
 use App\Actions\BoardItems\UpdateBoardItemAction;
 use App\Enums\BoardItemPriority;
+use App\Http\Requests\BoardItemDestroyRequest;
 use App\Http\Requests\ReorderBoardItemsRequest;
 use App\Http\Requests\StoreBoardItemRequest;
 use App\Http\Requests\UpdateBoardItemRequest;
@@ -108,14 +109,13 @@ class BoardItemController extends Controller
     }
 
     public function destroy(
+        BoardItemDestroyRequest $request,
         Team $current_team,
         Board $board,
         BoardItem $item,
         DestroyBoardItemAction $destroyBoardItemAction,
     ) {
-        if (request()->user()->cannot('delete', $item)) {
-            abort(403);
-        }
+        $request->validated();
 
         $destroyBoardItemAction->execute($item);
 
