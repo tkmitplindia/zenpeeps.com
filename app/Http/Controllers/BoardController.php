@@ -132,7 +132,7 @@ class BoardController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Board $board)
+    public function edit(Team $current_team, Board $board)
     {
         if (request()->user()->cannot('update', $board)) {
             abort(403);
