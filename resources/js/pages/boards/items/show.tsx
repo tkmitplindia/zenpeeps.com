@@ -1,6 +1,6 @@
 import { Head, usePage } from '@inertiajs/react';
-import { useFlashToast } from '@/hooks/use-flash-toast';
 import { ItemForm } from '@/components/boards/items/item-form';
+import { useFlashToast } from '@/hooks/use-flash-toast';
 import { index, show as showBoard } from '@/routes/boards';
 import { show as showItem } from '@/routes/boards/items';
 import type { Team } from '@/types';

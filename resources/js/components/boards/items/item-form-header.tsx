@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import { MoreVerticalIcon, Trash2Icon } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -22,6 +22,7 @@ export function ItemFormHeader({ item }: { item: BoardItem }) {
         if (title.trim() === '' || title === item.title) {
             return;
         }
+
         patch({ title: title.trim() });
     };
 
@@ -29,6 +30,7 @@ export function ItemFormHeader({ item }: { item: BoardItem }) {
         if (!confirm('Delete this task?')) {
             return;
         }
+
         router.delete(
             destroy({
                 current_team: currentTeam.slug,

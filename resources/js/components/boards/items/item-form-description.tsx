@@ -11,6 +11,7 @@ export function ItemFormDescription({ item }: { item: BoardItem }) {
         if (description === (item.description ?? '')) {
             return;
         }
+
         patch({ description: description === '' ? null : description });
     };
 

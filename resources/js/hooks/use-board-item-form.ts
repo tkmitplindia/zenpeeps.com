@@ -1,6 +1,6 @@
+import { router } from '@inertiajs/react';
 import { update } from '@/routes/boards/items';
 import type { BoardItem, BoardItemPriority } from '@/types/board';
-import { router } from '@inertiajs/react';
 import { useCurrentTeam } from './use-current-team';
 
 export type BoardItemPatch = {

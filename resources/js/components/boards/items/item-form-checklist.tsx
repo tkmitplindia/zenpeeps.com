@@ -1,6 +1,6 @@
-import { useState } from 'react';
 import { router } from '@inertiajs/react';
 import { PlusIcon, XIcon } from 'lucide-react';
+import { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Input } from '@/components/ui/input';
@@ -28,6 +28,7 @@ export function ItemFormChecklist({ item }: { item: BoardItem }) {
         if (draft.trim() === '') {
             return;
         }
+
         router.post(
             store(baseArgs).url,
             { name: draft.trim() },
@@ -76,6 +77,7 @@ export function ItemFormChecklist({ item }: { item: BoardItem }) {
             <ul className="divide-y rounded-md border">
                 {checklist.map((c) => {
                     const done = c.completed_at !== null;
+
                     return (
                         <li
                             key={c.id}

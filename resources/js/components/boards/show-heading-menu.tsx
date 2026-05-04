@@ -5,6 +5,7 @@ import {
     PlusIcon,
     TrashIcon,
 } from 'lucide-react';
+import { Button } from '../ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -13,7 +14,6 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
-import { Button } from '../ui/button';
 
 export function BoardShowHeadingMenu() {
     return (

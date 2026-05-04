@@ -17,10 +17,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Team extends Model
 {
     use GeneratesUniqueTeamSlugs;
-
     use HasFactory;
+
     /** @use HasFactory<TeamFactory> */
     use HasUuids;
+
     use SoftDeletes;
 
     /**

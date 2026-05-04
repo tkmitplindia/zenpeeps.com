@@ -1,14 +1,14 @@
-import { useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
 import { ArrowUpIcon, Trash2Icon } from 'lucide-react';
+import { useState } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { useInitials } from '@/hooks/use-initials';
-import { destroy, store } from '@/routes/boards/items/comments';
 import { relativeTime } from '@/lib/relative-time';
+import { destroy, store } from '@/routes/boards/items/comments';
 import type { Auth } from '@/types';
 import type { BoardItem, BoardItemComment } from '@/types/board';
 
@@ -28,6 +28,7 @@ export function ItemFormComments({ item }: { item: BoardItem }) {
         if (body.trim() === '') {
             return;
         }
+
         router.post(
             store(baseArgs).url,
             { body: body.trim() },

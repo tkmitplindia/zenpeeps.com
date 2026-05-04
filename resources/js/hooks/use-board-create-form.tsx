@@ -1,5 +1,5 @@
-import { BoardStatus } from '@/types/board';
 import { useForm } from '@inertiajs/react';
+import type { BoardStatus } from '@/types/board';
 
 export function useBoardCreateForm() {
     const form = useForm({

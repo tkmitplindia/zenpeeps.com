@@ -60,16 +60,19 @@ export function ShowBoardHeadingSort() {
                 <DropdownMenuItem asChild>
                     <Link
                         href={
-                            show({
-                                current_team: board.team.slug,
-                                board: board.id,
-                            }, {
-                                query: {
-                                    ...filters,
-                                    sort: 'name',
-                                    order: getOrder('name'),
+                            show(
+                                {
+                                    current_team: board.team.slug,
+                                    board: board.id,
                                 },
-                            }).url
+                                {
+                                    query: {
+                                        ...filters,
+                                        sort: 'name',
+                                        order: getOrder('name'),
+                                    },
+                                },
+                            ).url
                         }
                     >
                         {sort === 'name' ? (
@@ -83,16 +86,19 @@ export function ShowBoardHeadingSort() {
                 <DropdownMenuItem asChild>
                     <Link
                         href={
-                            show({
-                                current_team: board.team.slug,
-                                board: board.id,
-                            }, {
-                                query: {
-                                    ...filters,
-                                    sort: 'created_at',
-                                    order: getOrder('created_at'),
+                            show(
+                                {
+                                    current_team: board.team.slug,
+                                    board: board.id,
                                 },
-                            }).url
+                                {
+                                    query: {
+                                        ...filters,
+                                        sort: 'created_at',
+                                        order: getOrder('created_at'),
+                                    },
+                                },
+                            ).url
                         }
                     >
                         {sort === 'created_at' ? (
@@ -106,16 +112,19 @@ export function ShowBoardHeadingSort() {
                 <DropdownMenuItem asChild>
                     <Link
                         href={
-                            show({
-                                current_team: board.team.slug,
-                                board: board.id,
-                            }, {
-                                query: {
-                                    ...filters,
-                                    sort: 'updated_at',
-                                    order: getOrder('updated_at'),
+                            show(
+                                {
+                                    current_team: board.team.slug,
+                                    board: board.id,
                                 },
-                            }).url
+                                {
+                                    query: {
+                                        ...filters,
+                                        sort: 'updated_at',
+                                        order: getOrder('updated_at'),
+                                    },
+                                },
+                            ).url
                         }
                     >
                         {sort === 'updated_at' ? (

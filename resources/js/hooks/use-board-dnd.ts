@@ -12,7 +12,7 @@ import type {
 } from '@dnd-kit/core';
 import { arrayMove } from '@dnd-kit/sortable';
 import { router, usePage } from '@inertiajs/react';
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { reorder as reorderColumns } from '@/routes/boards/columns';
 import { reorder as reorderItems } from '@/routes/boards/items';
@@ -36,14 +36,18 @@ export function useBoardDnd() {
     const { columns, board } = usePage<BoardShowPageProps>().props;
     const currentTeam = useCurrentTeam();
 
-    // Local optimistic state. Server props are the source of truth — re-sync on
-    // every refresh so a failed request snaps the UI back to reality.
+    // Local optimistic state. Server props are the source of truth — re-sync
+    // during render whenever a fresh columns prop arrives so a failed request
+    // snaps the UI back to reality.
     const [local, setLocal] = useState<BoardDndColumn[]>(() =>
         buildLocal(columns),
     );
-    useEffect(() => {
+    const [columnsSnapshot, setColumnsSnapshot] = useState(columns);
+
+    if (columnsSnapshot !== columns) {
+        setColumnsSnapshot(columns);
         setLocal(buildLocal(columns));
-    }, [columns]);
+    }
 
     const [activeType, setActiveType] = useState<ActiveType>(null);
     const [activeId, setActiveId] = useState<string | null>(null);

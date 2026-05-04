@@ -1,6 +1,6 @@
-import { useRef } from 'react';
 import { router } from '@inertiajs/react';
 import { PaperclipIcon, UploadIcon, XIcon } from 'lucide-react';
+import { useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { useCurrentTeam } from '@/hooks/use-current-team';
@@ -8,8 +8,14 @@ import { destroy, store } from '@/routes/boards/items/attachments';
 import type { BoardItem, BoardItemAttachment } from '@/types/board';
 
 function formatSize(bytes: number): string {
-    if (bytes < 1024) return `${bytes} B`;
-    if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`;
+    if (bytes < 1024) {
+        return `${bytes} B`;
+    }
+
+    if (bytes < 1024 ** 2) {
+        return `${(bytes / 1024).toFixed(1)} KB`;
+    }
+
     return `${(bytes / 1024 ** 2).toFixed(1)} MB`;
 }
 
@@ -79,9 +85,11 @@ export function ItemFormAttachments({ item }: { item: BoardItem }) {
                     className="hidden"
                     onChange={(e) => {
                         const file = e.target.files?.[0];
+
                         if (file) {
                             onUpload(file);
                         }
+
                         e.target.value = '';
                     }}
                 />

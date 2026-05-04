@@ -13,15 +13,18 @@ export function ShowBoardHeadingSearchBar() {
 
     function onSubmit() {
         get(
-            show({
-                current_team: board.team.slug,
-                board: board.id,
-            }, {
-                query: {
-                    ...filters,
-                    search: data.search,
+            show(
+                {
+                    current_team: board.team.slug,
+                    board: board.id,
                 },
-            }).url,
+                {
+                    query: {
+                        ...filters,
+                        search: data.search,
+                    },
+                },
+            ).url,
         );
     }
 

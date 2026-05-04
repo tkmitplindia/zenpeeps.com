@@ -6,19 +6,11 @@ import {
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Link } from '@inertiajs/react';
-import { GripVerticalIcon, KanbanIcon, PlusIcon } from 'lucide-react';
+import { GripVerticalIcon, PlusIcon } from 'lucide-react';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { create } from '@/routes/boards/items';
 import type { BoardColumn, BoardItem } from '@/types/board';
 import { Button } from '../ui/button';
-import {
-    Empty,
-    EmptyContent,
-    EmptyDescription,
-    EmptyHeader,
-    EmptyMedia,
-    EmptyTitle,
-} from '../ui/empty';
 import { ShowBoardKanbanCard } from './show-kanban-card';
 
 export function ShowBoardKanbanColumn({

@@ -1,3 +1,4 @@
+import { ChevronDown } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
@@ -9,7 +10,6 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useInitials } from '@/hooks/use-initials';
 import type { User } from '@/types/auth';
-import { ChevronDown, UsersIcon } from 'lucide-react';
 
 export interface AppMemberSelectProps {
     value: string[];

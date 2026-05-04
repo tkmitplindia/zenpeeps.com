@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { router, usePage } from '@inertiajs/react';
 import {
     CalendarIcon,
@@ -8,6 +7,7 @@ import {
     SquareIcon,
     XIcon,
 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { AppMemberSelect } from '@/components/app-member-select';
 import { Button } from '@/components/ui/button';
 import { Calendar } from '@/components/ui/calendar';
@@ -45,8 +45,15 @@ function formatDuration(seconds: number): string {
     const h = Math.floor(seconds / 3600);
     const m = Math.floor((seconds % 3600) / 60);
     const s = seconds % 60;
-    if (h > 0) return `${h}h ${m}m`;
-    if (m > 0) return `${m}m ${s}s`;
+
+    if (h > 0) {
+        return `${h}h ${m}m`;
+    }
+
+    if (m > 0) {
+        return `${m}m ${s}s`;
+    }
+
     return `${s}s`;
 }
 
@@ -57,14 +64,18 @@ function useLiveSeconds(item: BoardItem): number {
         if (item.time_tracker_started_at === null) {
             return;
         }
+
         const id = setInterval(() => setNow(Date.now()), 1000);
+
         return () => clearInterval(id);
     }, [item.time_tracker_started_at]);
 
     if (item.time_tracker_started_at === null) {
         return item.tracked_seconds;
     }
+
     const startedAt = new Date(item.time_tracker_started_at).getTime();
+
     return (
         item.tracked_seconds + Math.max(0, Math.floor((now - startedAt) / 1000))
     );
@@ -79,7 +90,10 @@ export function ItemFormSidebar({ item }: { item: BoardItem }) {
     const [tagDraft, setTagDraft] = useState('');
 
     const onAddTag = () => {
-        if (tagDraft.trim() === '') return;
+        if (tagDraft.trim() === '') {
+            return;
+        }
+
         const next = [...tags.map((t) => t.name), tagDraft.trim()];
         patch({ tags: next });
         setTagDraft('');

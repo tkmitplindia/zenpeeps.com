@@ -1,21 +1,22 @@
+import { usePage } from '@inertiajs/react';
 import { AppMemberSelect } from '@/components/app-member-select';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { ListInput } from '@/components/ui/list-input';
 import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/input-error';
 import { useBoardCreateForm } from '@/hooks/use-board-create-form';
-import type { User } from '@/types';
 import { useCurrentTeam } from '@/hooks/use-current-team';
-import { usePage } from '@inertiajs/react';
-import type { BoardCreatePageProps } from '@/types/board';
 import { store } from '@/routes/boards';
+import type { User } from '@/types';
+import type { BoardCreatePageProps } from '@/types/board';
 
 export function CreateBoardForm() {
     const { data, setData, post, processing, errors } = useBoardCreateForm();
     const { team_members } = usePage<BoardCreatePageProps>().props;
     const currentTeam = useCurrentTeam();
+
     return (
         <div className="space-y-6">
             <div className="grid gap-2">

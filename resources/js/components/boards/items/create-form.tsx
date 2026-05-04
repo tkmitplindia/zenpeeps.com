@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
 import { usePage } from '@inertiajs/react';
+import { useEffect } from 'react';
 import { AppMemberSelect } from '@/components/app-member-select';
+import InputError from '@/components/input-error';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,7 +13,6 @@ import {
     SelectValue,
 } from '@/components/ui/select';
 import { Textarea } from '@/components/ui/textarea';
-import InputError from '@/components/input-error';
 import { useBoardItemCreateForm } from '@/hooks/use-board-item-create-form';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { store } from '@/routes/boards/items';

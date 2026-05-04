@@ -1,6 +1,6 @@
 import { Head, usePage } from '@inertiajs/react';
-import Heading from '@/components/heading';
 import { CreateBoardColumnForm } from '@/components/boards/columns/create-form';
+import Heading from '@/components/heading';
 import { index, show as showBoard } from '@/routes/boards';
 import type { Team } from '@/types';
 import type { Board, BoardColumnCreatePageProps } from '@/types/board';

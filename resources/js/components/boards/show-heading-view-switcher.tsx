@@ -17,15 +17,18 @@ export function ShowBoardHeadingViewSwitcher() {
             >
                 <Link
                     href={
-                        show({
-                            current_team: board.team.slug,
-                            board: board.id,
-                        }, {
-                            query: {
-                                ...filters,
-                                view: 'grid',
+                        show(
+                            {
+                                current_team: board.team.slug,
+                                board: board.id,
                             },
-                        }).url
+                            {
+                                query: {
+                                    ...filters,
+                                    view: 'grid',
+                                },
+                            },
+                        ).url
                     }
                 >
                     <LayoutGridIcon className="size-4" />
@@ -38,15 +41,18 @@ export function ShowBoardHeadingViewSwitcher() {
             >
                 <Link
                     href={
-                        show({
-                            current_team: board.team.slug,
-                            board: board.id,
-                        }, {
-                            query: {
-                                ...filters,
-                                view: 'list',
+                        show(
+                            {
+                                current_team: board.team.slug,
+                                board: board.id,
                             },
-                        }).url
+                            {
+                                query: {
+                                    ...filters,
+                                    view: 'list',
+                                },
+                            },
+                        ).url
                     }
                 >
                     <ListIcon className="size-4" />

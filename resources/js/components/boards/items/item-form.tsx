@@ -1,10 +1,10 @@
 import { usePage } from '@inertiajs/react';
 import type { BoardItemShowPageProps } from '@/types/board';
-import { ItemFormHeader } from './item-form-header';
-import { ItemFormDescription } from './item-form-description';
-import { ItemFormChecklist } from './item-form-checklist';
 import { ItemFormAttachments } from './item-form-attachments';
+import { ItemFormChecklist } from './item-form-checklist';
 import { ItemFormComments } from './item-form-comments';
+import { ItemFormDescription } from './item-form-description';
+import { ItemFormHeader } from './item-form-header';
 import { ItemFormSidebar } from './item-form-sidebar';
 
 export function ItemForm() {

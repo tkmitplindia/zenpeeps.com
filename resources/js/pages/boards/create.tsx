@@ -1,10 +1,9 @@
 import { Head } from '@inertiajs/react';
 
+import { CreateBoardForm } from '@/components/boards/create-form';
+import Heading from '@/components/heading';
 import { index } from '@/routes/boards';
 import type { Team } from '@/types';
-import Heading from '@/components/heading';
-
-import { CreateBoardForm } from '@/components/boards/create-form';
 
 export default function CreateBoardPage() {
     return (
