@@ -1,4 +1,5 @@
 import { Head, usePage } from '@inertiajs/react';
+import { BoardDeleteDialogProvider } from '@/components/boards/board-delete-dialog-provider';
 import { BoardsEmpty } from '@/components/boards/index-empty';
 import { IndexGridView } from '@/components/boards/index-grid-view';
 import { BoardIndexHeading } from '@/components/boards/index-heading';
@@ -23,13 +24,13 @@ export default function BoardsIndexPage() {
     }
 
     return (
-        <>
+        <BoardDeleteDialogProvider>
             <Head title="Boards" />
             <div className="space-y-4 p-4">
                 <BoardIndexHeading />
                 {renderBoardsView()}
             </div>
-        </>
+        </BoardDeleteDialogProvider>
     );
 }
 
