@@ -1,4 +1,3 @@
-import { Link } from '@inertiajs/react';
 import { useDroppable } from '@dnd-kit/core';
 import {
     SortableContext,
@@ -6,10 +5,11 @@ import {
     verticalListSortingStrategy,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
+import { Link } from '@inertiajs/react';
 import { GripVerticalIcon, KanbanIcon, PlusIcon } from 'lucide-react';
-import type { BoardColumn, BoardItem } from '@/types/board';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { create } from '@/routes/boards/items';
+import type { BoardColumn, BoardItem } from '@/types/board';
 import { Button } from '../ui/button';
 import {
     Empty,
@@ -24,9 +24,11 @@ import { ShowBoardKanbanCard } from './show-kanban-card';
 export function ShowBoardKanbanColumn({
     column,
     items,
+    overlay = false,
 }: {
     column: BoardColumn;
     items: BoardItem[];
+    overlay?: boolean;
 }) {
     const currentTeam = useCurrentTeam();
     const createUrl = create({
@@ -37,6 +39,7 @@ export function ShowBoardKanbanColumn({
     const sortable = useSortable({
         id: column.id,
         data: { type: 'column' },
+        disabled: overlay,
     });
     const {
         attributes,
@@ -48,20 +51,26 @@ export function ShowBoardKanbanColumn({
     } = sortable;
 
     // Droppable for items so cross-column drops land even when the column is
-    // empty (no item to hover over).
+    // empty (no item to hover over). Uses a distinct id from the sortable
+    // column so collision detection can resolve them independently.
     const { setNodeRef: setItemDropRef } = useDroppable({
-        id: column.id,
-        data: { type: 'column-droppable' },
+        id: `${column.id}:items`,
+        data: { type: 'column-droppable', columnId: column.id },
+        disabled: overlay,
     });
 
     return (
         <div
-            ref={setNodeRef}
-            style={{
-                transform: CSS.Transform.toString(transform),
-                transition,
-                opacity: isDragging ? 0.6 : 1,
-            }}
+            ref={overlay ? undefined : setNodeRef}
+            style={
+                overlay
+                    ? undefined
+                    : {
+                          transform: CSS.Transform.toString(transform),
+                          transition,
+                          opacity: isDragging ? 0 : 1,
+                      }
+            }
             className="flex w-80 shrink-0 flex-col gap-4 rounded-xl bg-sidebar p-4"
         >
             <div className="flex items-center justify-between">
@@ -97,19 +106,31 @@ export function ShowBoardKanbanColumn({
                 </div>
             </div>
 
-            <SortableContext
-                items={items.map((i) => i.id)}
-                strategy={verticalListSortingStrategy}
-            >
-                <div
-                    ref={setItemDropRef}
-                    className="flex min-h-12 flex-col gap-2"
-                >
+            {overlay ? (
+                <div className="flex min-h-12 flex-col gap-2">
                     {items.map((item) => (
-                        <ShowBoardKanbanCard key={item.id} item={item} />
+                        <ShowBoardKanbanCard
+                            key={item.id}
+                            item={item}
+                            overlay
+                        />
                     ))}
                 </div>
-            </SortableContext>
+            ) : (
+                <SortableContext
+                    items={items.map((i) => i.id)}
+                    strategy={verticalListSortingStrategy}
+                >
+                    <div
+                        ref={setItemDropRef}
+                        className="flex min-h-12 flex-col gap-2"
+                    >
+                        {items.map((item) => (
+                            <ShowBoardKanbanCard key={item.id} item={item} />
+                        ))}
+                    </div>
+                </SortableContext>
+            )}
         </div>
     );
 }
