@@ -9,16 +9,29 @@ use function Laravel\Prompts\text;
 
 class AdminBoardShow extends Command
 {
-    protected $signature = 'admin:board_show';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:board_show
+                            {--slug= : Board slug or ID}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Show details of a board from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $slug = text(
-            label: 'Board slug or ID',
-            required: 'Please enter the board slug or ID.',
-        );
+        $slug = $this->option('slug');
+        if ($slug === null || $slug === '') {
+            $slug = text(
+                label: 'Board slug or ID',
+                required: 'Please enter the board slug or ID.',
+            );
+        }
 
         $board = Board::withTrashed()->where('id', $slug)->orWhere('slug', $slug)->first();
 

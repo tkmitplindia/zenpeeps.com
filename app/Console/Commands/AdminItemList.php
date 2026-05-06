@@ -10,16 +10,30 @@ use function Laravel\Prompts\text;
 
 class AdminItemList extends Command
 {
-    protected $signature = 'admin:item_list';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:item_list
+                            {--board_slug= : Board slug or ID}
+                            {--column_id= : Filter by column ID}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'List all board items from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $boardSlug = text(
-            label: 'Board slug or ID',
-            required: 'Please enter the board slug or ID.',
-        );
+        $boardSlug = $this->option('board_slug');
+        if ($boardSlug === null || $boardSlug === '') {
+            $boardSlug = text(
+                label: 'Board slug or ID',
+                required: 'Please enter the board slug or ID.',
+            );
+        }
 
         $board = Board::where('id', $boardSlug)->orWhere('slug', $boardSlug)->first();
 
@@ -29,10 +43,13 @@ class AdminItemList extends Command
             return static::FAILURE;
         }
 
-        $columnId = text(
-            label: 'Filter by column ID (leave empty for all columns)',
-            default: '',
-        );
+        $columnId = $this->option('column_id');
+        if ($columnId === null || $columnId === '') {
+            $columnId = text(
+                label: 'Filter by column ID (leave empty for all columns)',
+                default: '',
+            );
+        }
 
         $items = BoardItem::where('board_id', $board->id)
             ->when(trim($columnId), fn ($q) => $q->where('board_column_id', trim($columnId)))

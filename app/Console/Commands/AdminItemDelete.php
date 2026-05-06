@@ -11,16 +11,30 @@ use function Laravel\Prompts\text;
 
 class AdminItemDelete extends Command
 {
-    protected $signature = 'admin:item_delete';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:item_delete
+                            {--item_id= : Board item ID}
+                            {--force : Skip confirmation prompt}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Delete a board item from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(DestroyBoardItemAction $destroyBoardItemAction): int
     {
-        $itemId = text(
-            label: 'Board item ID',
-            required: 'Please enter the board item ID.',
-        );
+        $itemId = $this->option('item_id');
+        if ($itemId === null || $itemId === '') {
+            $itemId = text(
+                label: 'Board item ID',
+                required: 'Please enter the board item ID.',
+            );
+        }
 
         $item = BoardItem::where('id', $itemId)->first();
 
@@ -32,15 +46,17 @@ class AdminItemDelete extends Command
 
         $this->warn("Item #{$item->number}: {$item->title}");
 
-        $confirmed = confirm(
-            label: 'Are you sure you want to delete this item?',
-            default: false,
-        );
+        if (! $this->option('force')) {
+            $confirmed = confirm(
+                label: 'Are you sure you want to delete this item?',
+                default: false,
+            );
 
-        if (! $confirmed) {
-            $this->info('Operation cancelled.');
+            if (! $confirmed) {
+                $this->info('Operation cancelled.');
 
-            return static::SUCCESS;
+                return static::SUCCESS;
+            }
         }
 
         $destroyBoardItemAction->execute($item);

@@ -11,16 +11,30 @@ use function Laravel\Prompts\text;
 
 class AdminItemReorder extends Command
 {
-    protected $signature = 'admin:item_reorder';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:item_reorder
+                            {--board_slug= : Board slug or ID}
+                            {--columns= : Column order JSON (e.g., \'[{"id":"col_id","items":["item1","item2"]}]\')}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Reorder board items across columns from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(ReorderBoardItemsAction $reorderBoardItemsAction): int
     {
-        $boardSlug = text(
-            label: 'Board slug or ID',
-            required: 'Please enter the board slug or ID.',
-        );
+        $boardSlug = $this->option('board_slug');
+        if ($boardSlug === null || $boardSlug === '') {
+            $boardSlug = text(
+                label: 'Board slug or ID',
+                required: 'Please enter the board slug or ID.',
+            );
+        }
 
         $board = Board::where('id', $boardSlug)->orWhere('slug', $boardSlug)->first();
 
@@ -67,6 +81,66 @@ class AdminItemReorder extends Command
             ['Column', 'Position', 'Item'],
             $rows
         );
+
+        $columnsOption = $this->option('columns');
+
+        if ($columnsOption !== null && $columnsOption !== '') {
+            $columnsOrder = json_decode($columnsOption, true);
+
+            if (! is_array($columnsOrder)) {
+                $this->error('Invalid JSON for --columns option.');
+
+                return static::FAILURE;
+            }
+
+            $validColumnsOrder = [];
+
+            foreach ($columnsOrder as $colOrder) {
+                $colId = $colOrder['id'] ?? null;
+                $itemIds = $colOrder['items'] ?? [];
+
+                if (! $colId || empty($itemIds)) {
+                    continue;
+                }
+
+                $column = $columns->where('id', $colId)->first();
+
+                if (! $column) {
+                    $this->warn("Column with ID '{$colId}' not found in board. Skipping.");
+
+                    continue;
+                }
+
+                $validIds = BoardItem::whereIn('id', $itemIds)
+                    ->where('board_id', $board->id)
+                    ->where('board_column_id', $column->id)
+                    ->pluck('id')
+                    ->toArray();
+
+                if (empty($validIds)) {
+                    $this->warn("No valid item IDs found for column '{$column->name}'. Skipping.");
+
+                    continue;
+                }
+
+                $validColumnsOrder[] = [
+                    'id' => $column->id,
+                    'items' => $validIds,
+                ];
+            }
+
+            if (empty($validColumnsOrder)) {
+                $this->info('No valid column order provided.');
+
+                return static::SUCCESS;
+            }
+
+            $reorderBoardItemsAction->execute($board, $validColumnsOrder);
+
+            $this->info('Items reordered successfully!');
+
+            return static::SUCCESS;
+        }
 
         $this->newLine();
         $this->warn('Enter the new order for each column.');

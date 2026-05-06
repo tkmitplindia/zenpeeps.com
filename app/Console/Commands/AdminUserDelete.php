@@ -10,16 +10,30 @@ use function Laravel\Prompts\text;
 
 class AdminUserDelete extends Command
 {
-    protected $signature = 'admin:user_delete';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:user_delete
+                            {--email= : User email}
+                            {--force : Skip confirmation prompt}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Delete a user from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $email = text(
-            label: 'User email',
-            required: 'Please enter the user email.',
-        );
+        $email = $this->option('email');
+        if ($email === null || $email === '') {
+            $email = text(
+                label: 'User email',
+                required: 'Please enter the user email.',
+            );
+        }
 
         $user = User::where('email', $email)->first();
 
@@ -32,15 +46,17 @@ class AdminUserDelete extends Command
         $this->warn("User: {$user->name} ({$user->email})");
         $this->warn('Teams: '.$user->teams()->count());
 
-        $confirmed = confirm(
-            label: 'Are you sure you want to delete this user?',
-            default: false,
-        );
+        if (! $this->option('force')) {
+            $confirmed = confirm(
+                label: 'Are you sure you want to delete this user?',
+                default: false,
+            );
 
-        if (! $confirmed) {
-            $this->info('Operation cancelled.');
+            if (! $confirmed) {
+                $this->info('Operation cancelled.');
 
-            return static::SUCCESS;
+                return static::SUCCESS;
+            }
         }
 
         $user->delete();

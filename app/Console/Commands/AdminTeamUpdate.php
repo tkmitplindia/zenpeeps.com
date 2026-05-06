@@ -12,7 +12,9 @@ class AdminTeamUpdate extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'admin:team_update';
+    protected $signature = 'admin:team_update
+                            {--slug= : Team slug}
+                            {--name= : New team name}';
 
     /**
      * The console command description.
@@ -24,10 +26,13 @@ class AdminTeamUpdate extends Command
      */
     public function handle(): int
     {
-        $slug = text(
-            label: 'Team slug',
-            required: 'Please enter the team slug.',
-        );
+        $slug = $this->option('slug');
+        if ($slug === null || $slug === '') {
+            $slug = text(
+                label: 'Team slug',
+                required: 'Please enter the team slug.',
+            );
+        }
 
         $team = Team::where('slug', $slug)->first();
 
@@ -39,10 +44,13 @@ class AdminTeamUpdate extends Command
 
         $this->info("Current team name: {$team->name}");
 
-        $newName = text(
-            label: 'New team name',
-            default: $team->name,
-        );
+        $newName = $this->option('name');
+        if ($newName === null || $newName === '') {
+            $newName = text(
+                label: 'New team name',
+                default: $team->name,
+            );
+        }
 
         $team->update(['name' => trim($newName)]);
 

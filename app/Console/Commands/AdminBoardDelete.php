@@ -11,16 +11,30 @@ use function Laravel\Prompts\text;
 
 class AdminBoardDelete extends Command
 {
-    protected $signature = 'admin:board_delete';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:board_delete
+                            {--slug= : Board slug or ID}
+                            {--force : Skip confirmation prompt}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Delete a board from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(DestroyBoardAction $destroyBoardAction): int
     {
-        $slug = text(
-            label: 'Board slug or ID',
-            required: 'Please enter the board slug or ID.',
-        );
+        $slug = $this->option('slug');
+        if ($slug === null || $slug === '') {
+            $slug = text(
+                label: 'Board slug or ID',
+                required: 'Please enter the board slug or ID.',
+            );
+        }
 
         $board = Board::where('id', $slug)->orWhere('slug', $slug)->first();
 
@@ -34,15 +48,17 @@ class AdminBoardDelete extends Command
         $this->warn('Items: '.$board->items()->count());
         $this->warn('Columns: '.$board->columns()->count());
 
-        $confirmed = confirm(
-            label: 'Are you sure you want to delete this board?',
-            default: false,
-        );
+        if (! $this->option('force')) {
+            $confirmed = confirm(
+                label: 'Are you sure you want to delete this board?',
+                default: false,
+            );
 
-        if (! $confirmed) {
-            $this->info('Operation cancelled.');
+            if (! $confirmed) {
+                $this->info('Operation cancelled.');
 
-            return static::SUCCESS;
+                return static::SUCCESS;
+            }
         }
 
         $destroyBoardAction->execute($board);

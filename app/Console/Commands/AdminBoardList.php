@@ -10,16 +10,31 @@ use function Laravel\Prompts\text;
 
 class AdminBoardList extends Command
 {
-    protected $signature = 'admin:board_list';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:board_list
+                            {--team_slug= : Team slug}
+                            {--status= : Filter by status (active/archived)}
+                            {--search= : Search by name}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'List all boards from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $teamSlug = text(
-            label: 'Team slug',
-            required: 'Please enter the team slug.',
-        );
+        $teamSlug = $this->option('team_slug');
+        if ($teamSlug === null || $teamSlug === '') {
+            $teamSlug = text(
+                label: 'Team slug',
+                required: 'Please enter the team slug.',
+            );
+        }
 
         $team = Team::where('slug', $teamSlug)->first();
 
@@ -29,15 +44,21 @@ class AdminBoardList extends Command
             return static::FAILURE;
         }
 
-        $status = text(
-            label: 'Filter by status (active/archived/leave empty for all)',
-            default: '',
-        );
+        $status = $this->option('status');
+        if ($status === null || $status === '') {
+            $status = text(
+                label: 'Filter by status (active/archived/leave empty for all)',
+                default: '',
+            );
+        }
 
-        $search = text(
-            label: 'Search by name (leave empty for none)',
-            default: '',
-        );
+        $search = $this->option('search');
+        if ($search === null || $search === '') {
+            $search = text(
+                label: 'Search by name (leave empty for none)',
+                default: '',
+            );
+        }
 
         $boards = Board::ofTeam($team)
             ->when(trim($status), fn ($q) => $q->where('status', trim($status)))

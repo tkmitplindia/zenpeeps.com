@@ -13,7 +13,9 @@ class AdminTeamDelete extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'admin:team_delete';
+    protected $signature = 'admin:team_delete
+                            {--slug= : Team slug}
+                            {--force : Skip confirmation prompt}';
 
     /**
      * The console command description.
@@ -25,10 +27,13 @@ class AdminTeamDelete extends Command
      */
     public function handle(): int
     {
-        $slug = text(
-            label: 'Team slug',
-            required: 'Please enter the team slug.',
-        );
+        $slug = $this->option('slug');
+        if ($slug === null || $slug === '') {
+            $slug = text(
+                label: 'Team slug',
+                required: 'Please enter the team slug.',
+            );
+        }
 
         $team = Team::where('slug', $slug)->first();
 
@@ -41,15 +46,17 @@ class AdminTeamDelete extends Command
         $this->warn("Team: {$team->name} ({$team->slug})");
         $this->warn('Members: '.$team->members()->count());
 
-        $confirmed = confirm(
-            label: 'Are you sure you want to delete this team?',
-            default: false,
-        );
+        if (! $this->option('force')) {
+            $confirmed = confirm(
+                label: 'Are you sure you want to delete this team?',
+                default: false,
+            );
 
-        if (! $confirmed) {
-            $this->info('Operation cancelled.');
+            if (! $confirmed) {
+                $this->info('Operation cancelled.');
 
-            return static::SUCCESS;
+                return static::SUCCESS;
+            }
         }
 
         $team->invitations()->delete();

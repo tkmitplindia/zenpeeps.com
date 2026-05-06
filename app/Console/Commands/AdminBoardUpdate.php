@@ -11,16 +11,32 @@ use function Laravel\Prompts\text;
 
 class AdminBoardUpdate extends Command
 {
-    protected $signature = 'admin:board_update';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:board_update
+                            {--slug= : Board slug or ID}
+                            {--name= : New name}
+                            {--description= : New description}
+                            {--status= : New status}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Update a board from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(UpdateBoardAction $updateBoardAction): int
     {
-        $slug = text(
-            label: 'Board slug or ID',
-            required: 'Please enter the board slug or ID.',
-        );
+        $slug = $this->option('slug');
+        if ($slug === null || $slug === '') {
+            $slug = text(
+                label: 'Board slug or ID',
+                required: 'Please enter the board slug or ID.',
+            );
+        }
 
         $board = Board::where('id', $slug)->orWhere('slug', $slug)->first();
 
@@ -33,21 +49,30 @@ class AdminBoardUpdate extends Command
         $this->info("Current name: {$board->name}");
         $this->info("Current status: {$board->status}");
 
-        $name = text(
-            label: 'New name',
-            default: $board->name,
-        );
+        $name = $this->option('name');
+        if ($name === null || $name === '') {
+            $name = text(
+                label: 'New name',
+                default: $board->name,
+            );
+        }
 
-        $description = text(
-            label: 'New description (leave empty to keep current)',
-            default: $board->description ?? '',
-        );
+        $description = $this->option('description');
+        if ($description === null || $description === '') {
+            $description = text(
+                label: 'New description (leave empty to keep current)',
+                default: $board->description ?? '',
+            );
+        }
 
         $statusOptions = array_keys(BoardStatus::getOptions());
-        $status = text(
-            label: 'New status ('.implode('/', $statusOptions).')',
-            default: $board->status,
-        );
+        $status = $this->option('status');
+        if ($status === null || $status === '') {
+            $status = text(
+                label: 'New status ('.implode('/', $statusOptions).')',
+                default: $board->status,
+            );
+        }
 
         $board = $updateBoardAction->execute(
             board: $board,

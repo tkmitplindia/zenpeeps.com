@@ -9,16 +9,29 @@ use function Laravel\Prompts\text;
 
 class AdminUserVerifyEmail extends Command
 {
-    protected $signature = 'admin:user_verify_email';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:user_verify_email
+                            {--email= : User email}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Mark a user email as verified from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $email = text(
-            label: 'User email',
-            required: 'Please enter the user email.',
-        );
+        $email = $this->option('email');
+        if ($email === null || $email === '') {
+            $email = text(
+                label: 'User email',
+                required: 'Please enter the user email.',
+            );
+        }
 
         $user = User::where('email', $email)->first();
 

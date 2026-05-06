@@ -9,16 +9,29 @@ use function Laravel\Prompts\text;
 
 class AdminUserShow extends Command
 {
-    protected $signature = 'admin:user_show';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:user_show
+                            {--email= : User email}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Show details of a user from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $email = text(
-            label: 'User email',
-            required: 'Please enter the user email.',
-        );
+        $email = $this->option('email');
+        if ($email === null || $email === '') {
+            $email = text(
+                label: 'User email',
+                required: 'Please enter the user email.',
+            );
+        }
 
         $user = User::with(['teams', 'boards', 'currentTeam'])
             ->where('email', $email)

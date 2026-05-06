@@ -10,16 +10,30 @@ use function Laravel\Prompts\text;
 
 class AdminItemMove extends Command
 {
-    protected $signature = 'admin:item_move';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:item_move
+                            {--item_id= : Board item ID}
+                            {--column_id= : Target column ID}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Move a board item to a different column from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $itemId = text(
-            label: 'Board item ID',
-            required: 'Please enter the board item ID.',
-        );
+        $itemId = $this->option('item_id');
+        if ($itemId === null || $itemId === '') {
+            $itemId = text(
+                label: 'Board item ID',
+                required: 'Please enter the board item ID.',
+            );
+        }
 
         $item = BoardItem::where('id', $itemId)->first();
 
@@ -59,10 +73,13 @@ class AdminItemMove extends Command
             ])->toArray()
         );
 
-        $targetColumnId = text(
-            label: 'Target column ID',
-            required: 'Please enter the target column ID.',
-        );
+        $targetColumnId = $this->option('column_id');
+        if ($targetColumnId === null || $targetColumnId === '') {
+            $targetColumnId = text(
+                label: 'Target column ID',
+                required: 'Please enter the target column ID.',
+            );
+        }
 
         $targetColumn = $columns->where('id', $targetColumnId)->first();
 

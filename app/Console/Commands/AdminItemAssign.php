@@ -10,16 +10,30 @@ use function Laravel\Prompts\text;
 
 class AdminItemAssign extends Command
 {
-    protected $signature = 'admin:item_assign';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:item_assign
+                            {--item_id= : Board item ID}
+                            {--assignee_emails= : Assignee emails (comma-separated)}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Assign a user to a board item from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $itemId = text(
-            label: 'Board item ID',
-            required: 'Please enter the board item ID.',
-        );
+        $itemId = $this->option('item_id');
+        if ($itemId === null || $itemId === '') {
+            $itemId = text(
+                label: 'Board item ID',
+                required: 'Please enter the board item ID.',
+            );
+        }
 
         $item = BoardItem::where('id', $itemId)->first();
 
@@ -46,10 +60,13 @@ class AdminItemAssign extends Command
             );
         }
 
-        $assigneeEmails = text(
-            label: 'Assignee emails (comma-separated)',
-            required: 'Please enter the assignee email(s).',
-        );
+        $assigneeEmails = $this->option('assignee_emails');
+        if ($assigneeEmails === null || $assigneeEmails === '') {
+            $assigneeEmails = text(
+                label: 'Assignee emails (comma-separated)',
+                required: 'Please enter the assignee email(s).',
+            );
+        }
 
         $emails = array_filter(array_map('trim', explode(',', $assigneeEmails)));
         $users = User::whereIn('email', $emails)->get();

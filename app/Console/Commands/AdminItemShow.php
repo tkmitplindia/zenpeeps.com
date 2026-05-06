@@ -9,16 +9,29 @@ use function Laravel\Prompts\text;
 
 class AdminItemShow extends Command
 {
-    protected $signature = 'admin:item_show';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:item_show
+                            {--item_id= : Board item ID}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Show details of a board item from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $itemId = text(
-            label: 'Board item ID',
-            required: 'Please enter the board item ID.',
-        );
+        $itemId = $this->option('item_id');
+        if ($itemId === null || $itemId === '') {
+            $itemId = text(
+                label: 'Board item ID',
+                required: 'Please enter the board item ID.',
+            );
+        }
 
         $item = BoardItem::withTrashed()
             ->where('id', $itemId)

@@ -9,16 +9,30 @@ use function Laravel\Prompts\text;
 
 class AdminBoardRestore extends Command
 {
-    protected $signature = 'admin:board_restore';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:board_restore
+                            {--slug= : Board slug or ID}
+                            {--force : Skip not-deleted check}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Restore a soft-deleted board from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(): int
     {
-        $slug = text(
-            label: 'Board slug or ID',
-            required: 'Please enter the board slug or ID.',
-        );
+        $slug = $this->option('slug');
+        if ($slug === null || $slug === '') {
+            $slug = text(
+                label: 'Board slug or ID',
+                required: 'Please enter the board slug or ID.',
+            );
+        }
 
         $board = Board::withTrashed()->where('id', $slug)->orWhere('slug', $slug)->first();
 

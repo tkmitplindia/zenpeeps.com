@@ -12,16 +12,33 @@ use function Laravel\Prompts\text;
 
 class AdminBoardCreate extends Command
 {
-    protected $signature = 'admin:board_create';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:board_create
+                            {--team_slug= : Team slug}
+                            {--name= : Board name}
+                            {--description= : Board description}
+                            {--status= : Board status (active/archived)}
+                            {--creator_email= : Creator email}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Create a new board from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(StoreBoardAction $storeBoardAction): int
     {
-        $teamSlug = text(
-            label: 'Team slug',
-            required: 'Please enter the team slug.',
-        );
+        $teamSlug = $this->option('team_slug');
+        if ($teamSlug === null || $teamSlug === '') {
+            $teamSlug = text(
+                label: 'Team slug',
+                required: 'Please enter the team slug.',
+            );
+        }
 
         $team = Team::where('slug', $teamSlug)->first();
 
@@ -31,26 +48,38 @@ class AdminBoardCreate extends Command
             return static::FAILURE;
         }
 
-        $name = text(
-            label: 'Board name',
-            required: 'Please enter a board name.',
-        );
+        $name = $this->option('name');
+        if ($name === null || $name === '') {
+            $name = text(
+                label: 'Board name',
+                required: 'Please enter a board name.',
+            );
+        }
 
-        $description = text(
-            label: 'Description (leave empty for none)',
-            default: '',
-        );
+        $description = $this->option('description');
+        if ($description === null || $description === '') {
+            $description = text(
+                label: 'Description (leave empty for none)',
+                default: '',
+            );
+        }
 
         $statusOptions = array_keys(BoardStatus::getOptions());
-        $status = text(
-            label: 'Status ('.implode('/', $statusOptions).')',
-            default: 'active',
-        );
+        $status = $this->option('status');
+        if ($status === null || $status === '') {
+            $status = text(
+                label: 'Status ('.implode('/', $statusOptions).')',
+                default: 'active',
+            );
+        }
 
-        $createdByEmail = text(
-            label: 'Created by email',
-            required: 'Please enter the creator email.',
-        );
+        $createdByEmail = $this->option('creator_email');
+        if ($createdByEmail === null || $createdByEmail === '') {
+            $createdByEmail = text(
+                label: 'Created by email',
+                required: 'Please enter the creator email.',
+            );
+        }
 
         $createdBy = User::where('email', $createdByEmail)->first();
 

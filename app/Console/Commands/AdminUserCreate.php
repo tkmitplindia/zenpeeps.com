@@ -11,31 +11,56 @@ use function Laravel\Prompts\text;
 
 class AdminUserCreate extends Command
 {
-    protected $signature = 'admin:user_create';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:user_create
+                            {--name= : User name}
+                            {--email= : User email}
+                            {--password= : User password}
+                            {--team_slug= : Team slug (optional)}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Create a new user from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(CreateNewUser $createNewUser): int
     {
-        $name = text(
-            label: 'Name',
-            required: 'Please enter the user name.',
-        );
+        $name = $this->option('name');
+        if ($name === null || $name === '') {
+            $name = text(
+                label: 'Name',
+                required: 'Please enter the user name.',
+            );
+        }
 
-        $email = text(
-            label: 'Email',
-            required: 'Please enter the user email.',
-        );
+        $email = $this->option('email');
+        if ($email === null || $email === '') {
+            $email = text(
+                label: 'Email',
+                required: 'Please enter the user email.',
+            );
+        }
 
-        $password = text(
-            label: 'Password',
-            required: 'Please enter a password.',
-        );
+        $password = $this->option('password');
+        if ($password === null || $password === '') {
+            $password = text(
+                label: 'Password',
+                required: 'Please enter a password.',
+            );
+        }
 
-        $teamSlug = text(
-            label: 'Team slug (optional, press Enter to skip)',
-            default: '',
-        );
+        $teamSlug = $this->option('team_slug');
+        if ($teamSlug === null || $teamSlug === '') {
+            $teamSlug = text(
+                label: 'Team slug (optional, press Enter to skip)',
+                default: '',
+            );
+        }
 
         $user = $createNewUser->create([
             'name' => trim($name),

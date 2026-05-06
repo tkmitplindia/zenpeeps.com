@@ -12,7 +12,8 @@ class AdminTeamShow extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'admin:team_show';
+    protected $signature = 'admin:team_show
+                            {--slug= : Team slug}';
 
     /**
      * The console command description.
@@ -24,10 +25,13 @@ class AdminTeamShow extends Command
      */
     public function handle(): int
     {
-        $slug = text(
-            label: 'Team slug',
-            required: 'Please enter the team slug.',
-        );
+        $slug = $this->option('slug');
+        if ($slug === null || $slug === '') {
+            $slug = text(
+                label: 'Team slug',
+                required: 'Please enter the team slug.',
+            );
+        }
 
         $team = Team::with(['members', 'invitations'])->where('slug', $slug)->first();
 

@@ -12,16 +12,38 @@ use function Laravel\Prompts\text;
 
 class AdminItemCreate extends Command
 {
-    protected $signature = 'admin:item_create';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:item_create
+                            {--board_slug= : Board slug or ID}
+                            {--column_id= : Column ID}
+                            {--title= : Item title}
+                            {--description= : Item description}
+                            {--priority= : Priority (low/medium/high)}
+                            {--estimated_minutes= : Estimated minutes}
+                            {--due_date= : Due date (YYYY-MM-DD)}
+                            {--assignee_emails= : Assignee emails (comma-separated)}
+                            {--tags= : Tags (comma-separated)}
+                            {--creator_email= : Creator email}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Create a new board item from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(StoreBoardItemAction $storeBoardItemAction): int
     {
-        $boardSlug = text(
-            label: 'Board slug or ID',
-            required: 'Please enter the board slug or ID.',
-        );
+        $boardSlug = $this->option('board_slug');
+        if ($boardSlug === null || $boardSlug === '') {
+            $boardSlug = text(
+                label: 'Board slug or ID',
+                required: 'Please enter the board slug or ID.',
+            );
+        }
 
         $board = Board::where('id', $boardSlug)->orWhere('slug', $boardSlug)->first();
 
@@ -49,10 +71,13 @@ class AdminItemCreate extends Command
             ])->toArray()
         );
 
-        $columnId = text(
-            label: 'Column ID',
-            required: 'Please enter the column ID.',
-        );
+        $columnId = $this->option('column_id');
+        if ($columnId === null || $columnId === '') {
+            $columnId = text(
+                label: 'Column ID',
+                required: 'Please enter the column ID.',
+            );
+        }
 
         $column = $columns->where('id', $columnId)->first();
 
@@ -62,46 +87,70 @@ class AdminItemCreate extends Command
             return static::FAILURE;
         }
 
-        $title = text(
-            label: 'Title',
-            required: 'Please enter a title.',
-        );
+        $title = $this->option('title');
+        if ($title === null || $title === '') {
+            $title = text(
+                label: 'Title',
+                required: 'Please enter a title.',
+            );
+        }
 
-        $description = text(
-            label: 'Description (leave empty for none)',
-            default: '',
-        );
+        $description = $this->option('description');
+        if ($description === null || $description === '') {
+            $description = text(
+                label: 'Description (leave empty for none)',
+                default: '',
+            );
+        }
 
         $priorityOptions = array_keys(BoardItemPriority::getOptions());
-        $priority = text(
-            label: 'Priority ('.implode('/', $priorityOptions).')',
-            default: 'medium',
-        );
+        $priority = $this->option('priority');
+        if ($priority === null || $priority === '') {
+            $priority = text(
+                label: 'Priority ('.implode('/', $priorityOptions).')',
+                default: 'medium',
+            );
+        }
 
-        $estimatedMinutes = text(
-            label: 'Estimated minutes (leave empty for none)',
-            default: '',
-        );
+        $estimatedMinutes = $this->option('estimated_minutes');
+        if ($estimatedMinutes === null || $estimatedMinutes === '') {
+            $estimatedMinutes = text(
+                label: 'Estimated minutes (leave empty for none)',
+                default: '',
+            );
+        }
 
-        $dueDate = text(
-            label: 'Due date (YYYY-MM-DD, leave empty for none)',
-            default: '',
-        );
+        $dueDate = $this->option('due_date');
+        if ($dueDate === null || $dueDate === '') {
+            $dueDate = text(
+                label: 'Due date (YYYY-MM-DD, leave empty for none)',
+                default: '',
+            );
+        }
 
-        $assigneeEmails = text(
-            label: 'Assignee emails (comma-separated, leave empty for none)',
-            default: '',
-        );
+        $assigneeEmails = $this->option('assignee_emails');
+        if ($assigneeEmails === null || $assigneeEmails === '') {
+            $assigneeEmails = text(
+                label: 'Assignee emails (comma-separated, leave empty for none)',
+                default: '',
+            );
+        }
 
-        $tagNames = text(
-            label: 'Tags (comma-separated, leave empty for none)',
-            default: '',
-        );
+        $tagNames = $this->option('tags');
+        if ($tagNames === null || $tagNames === '') {
+            $tagNames = text(
+                label: 'Tags (comma-separated, leave empty for none)',
+                default: '',
+            );
+        }
 
-        $createdByEmail = text(
-            label: 'Created by email',
-            required: 'Please enter the creator email.',
-        );
+        $createdByEmail = $this->option('creator_email');
+        if ($createdByEmail === null || $createdByEmail === '') {
+            $createdByEmail = text(
+                label: 'Created by email',
+                required: 'Please enter the creator email.',
+            );
+        }
 
         $createdBy = User::where('email', $createdByEmail)->first();
 

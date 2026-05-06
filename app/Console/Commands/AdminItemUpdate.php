@@ -11,16 +11,34 @@ use function Laravel\Prompts\text;
 
 class AdminItemUpdate extends Command
 {
-    protected $signature = 'admin:item_update';
+    /**
+     * The name and signature of the console command.
+     */
+    protected $signature = 'admin:item_update
+                            {--item_id= : Board item ID}
+                            {--title= : New title}
+                            {--description= : New description}
+                            {--priority= : New priority}
+                            {--estimated_minutes= : New estimated minutes}
+                            {--due_date= : New due date (YYYY-MM-DD)}';
 
+    /**
+     * The console command description.
+     */
     protected $description = 'Update a board item from the CLI';
 
+    /**
+     * Execute the console command.
+     */
     public function handle(UpdateBoardItemAction $updateBoardItemAction): int
     {
-        $itemId = text(
-            label: 'Board item ID',
-            required: 'Please enter the board item ID.',
-        );
+        $itemId = $this->option('item_id');
+        if ($itemId === null || $itemId === '') {
+            $itemId = text(
+                label: 'Board item ID',
+                required: 'Please enter the board item ID.',
+            );
+        }
 
         $item = BoardItem::where('id', $itemId)->first();
 
@@ -32,31 +50,46 @@ class AdminItemUpdate extends Command
 
         $this->info("Current: #{$item->number} {$item->title} (Priority: {$item->priority})");
 
-        $title = text(
-            label: 'New title',
-            default: $item->title,
-        );
+        $title = $this->option('title');
+        if ($title === null || $title === '') {
+            $title = text(
+                label: 'New title',
+                default: $item->title,
+            );
+        }
 
-        $description = text(
-            label: 'New description (leave empty to keep current)',
-            default: $item->description ?? '',
-        );
+        $description = $this->option('description');
+        if ($description === null || $description === '') {
+            $description = text(
+                label: 'New description (leave empty to keep current)',
+                default: $item->description ?? '',
+            );
+        }
 
         $priorityOptions = array_keys(BoardItemPriority::getOptions());
-        $priority = text(
-            label: 'New priority ('.implode('/', $priorityOptions).')',
-            default: $item->priority,
-        );
+        $priority = $this->option('priority');
+        if ($priority === null || $priority === '') {
+            $priority = text(
+                label: 'New priority ('.implode('/', $priorityOptions).')',
+                default: $item->priority,
+            );
+        }
 
-        $estimatedMinutes = text(
-            label: 'New estimated minutes (leave empty to keep current)',
-            default: $item->estimated_minutes !== null ? (string) $item->estimated_minutes : '',
-        );
+        $estimatedMinutes = $this->option('estimated_minutes');
+        if ($estimatedMinutes === null || $estimatedMinutes === '') {
+            $estimatedMinutes = text(
+                label: 'New estimated minutes (leave empty to keep current)',
+                default: $item->estimated_minutes !== null ? (string) $item->estimated_minutes : '',
+            );
+        }
 
-        $dueDate = text(
-            label: 'New due date (YYYY-MM-DD, leave empty to keep current)',
-            default: $item->due_date ?? '',
-        );
+        $dueDate = $this->option('due_date');
+        if ($dueDate === null || $dueDate === '') {
+            $dueDate = text(
+                label: 'New due date (YYYY-MM-DD, leave empty to keep current)',
+                default: $item->due_date ?? '',
+            );
+        }
 
         $attributes = [
             'title' => trim($title),

@@ -13,7 +13,9 @@ class AdminTeamCreate extends Command
     /**
      * The name and signature of the console command.
      */
-    protected $signature = 'admin:team_create';
+    protected $signature = 'admin:team_create
+                            {--name= : Team name}
+                            {--owner_email= : Owner email address}';
 
     /**
      * The console command description.
@@ -25,16 +27,22 @@ class AdminTeamCreate extends Command
      */
     public function handle(CreateTeam $createTeam): int
     {
-        $name = text(
-            label: 'Team name',
-            required: 'Please enter a team name.',
-            validate: fn (string $value) => strlen(trim($value)) > 0 ? null : 'Team name is required.',
-        );
+        $name = $this->option('name');
+        if ($name === null || $name === '') {
+            $name = text(
+                label: 'Team name',
+                required: 'Please enter a team name.',
+                validate: fn (string $value) => strlen(trim($value)) > 0 ? null : 'Team name is required.',
+            );
+        }
 
-        $ownerEmail = text(
-            label: 'Owner email',
-            required: 'Please enter the owner\'s email address.',
-        );
+        $ownerEmail = $this->option('owner_email');
+        if ($ownerEmail === null || $ownerEmail === '') {
+            $ownerEmail = text(
+                label: 'Owner email',
+                required: 'Please enter the owner\'s email address.',
+            );
+        }
 
         $owner = User::where('email', $ownerEmail)->first();
 
