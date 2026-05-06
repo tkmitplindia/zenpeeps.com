@@ -16,7 +16,7 @@ final class IndexBoardItemsAction
     public function execute(
         Board $board,
         ?string $search = null,
-        ?string $sort = 'title',
+        ?string $sort = 'position',
         ?string $order = 'asc',
         ?string $view = 'grid',
         ?int $limit = 15,

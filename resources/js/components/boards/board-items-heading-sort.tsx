@@ -20,14 +20,14 @@ export function BoardItemsHeadingSort() {
 
     function renderDropdownLabel() {
         switch (sort) {
-            case 'name':
-                return 'Name';
+            case 'position':
+                return 'Position';
             case 'created_at':
                 return 'Created';
             case 'updated_at':
                 return 'Updated';
             default:
-                return 'Name';
+                return 'Position';
         }
     }
 
@@ -68,19 +68,19 @@ export function BoardItemsHeadingSort() {
                                 {
                                     query: {
                                         ...filters,
-                                        sort: 'name',
-                                        order: getOrder('name'),
+                                        sort: 'position',
+                                        order: getOrder('position'),
                                     },
                                 },
                             ).url
                         }
                     >
-                        {sort === 'name' ? (
+                        {sort === 'position' ? (
                             renderSortIcon()
                         ) : (
                             <span className="size-4" />
                         )}
-                        Name
+                        Position
                     </Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
