@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Console\Commands;
+
+use App\Models\User;
+use Illuminate\Console\Command;
+
+use function Laravel\Prompts\text;
+
+class AdminUserUpdate extends Command
+{
+    protected $signature = 'admin:user_update';
+
+    protected $description = 'Update a user from the CLI';
+
+    public function handle(): int
+    {
+        $email = text(
+            label: 'User email',
+            required: 'Please enter the user email.',
+        );
+
+        $user = User::where('email', $email)->first();
+
+        if (! $user) {
+            $this->error("No user found with email: {$email}");
+
+            return static::FAILURE;
+        }
+
+        $this->info("Current name: {$user->name}");
+
+        $name = text(
+            label: 'New name',
+            default: $user->name,
+        );
+
+        $user->name = trim($name);
+        $user->save();
+
+        $this->info('User updated successfully!');
+        $this->newLine();
+        $this->table(
+            ['ID', 'Name', 'Email'],
+            [[$user->id, $user->name, $user->email]]
+        );
+
+        return static::SUCCESS;
+    }
+}
