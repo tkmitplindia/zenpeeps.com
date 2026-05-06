@@ -1,4 +1,4 @@
-import { usePage } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {
     ArchiveIcon,
     MoreVerticalIcon,
@@ -6,6 +6,7 @@ import {
     PlusIcon,
     TrashIcon,
 } from 'lucide-react';
+import { edit } from '@/routes/boards';
 import type { BoardItemsIndexPageProps } from '@/types/board';
 import { Button } from '../ui/button';
 import {
@@ -40,8 +41,10 @@ export function BoardItemsHeadingMenu() {
                 </DropdownMenuGroup>
                 <DropdownMenuSeparator />
                 <DropdownMenuGroup>
-                    <DropdownMenuItem>
-                        <PencilIcon /> Edit Board
+                    <DropdownMenuItem asChild>
+                        <Link href={edit({ current_team: board.team.slug, board: board.id }).url}>
+                            <PencilIcon /> Edit Board
+                        </Link>
                     </DropdownMenuItem>
                     <DropdownMenuItem>
                         <ArchiveIcon />
