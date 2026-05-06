@@ -11,9 +11,9 @@ import { useCurrentTeam } from '@/hooks/use-current-team';
 import { create } from '@/routes/boards/items';
 import type { BoardColumn, BoardItem } from '@/types/board';
 import { Button } from '../ui/button';
-import { ShowBoardKanbanCard } from './show-kanban-card';
+import { BoardItemsListRow } from './board-items-list-row';
 
-export function ShowBoardKanbanColumn({
+export function BoardItemsListSection({
     column,
     items,
     overlay = false,
@@ -28,11 +28,6 @@ export function ShowBoardKanbanColumn({
         board: column.board_id,
     }).url;
 
-    const sortable = useSortable({
-        id: column.id,
-        data: { type: 'column' },
-        disabled: overlay,
-    });
     const {
         attributes,
         listeners,
@@ -40,11 +35,15 @@ export function ShowBoardKanbanColumn({
         transform,
         transition,
         isDragging,
-    } = sortable;
+    } = useSortable({
+        id: column.id,
+        data: { type: 'column' },
+        disabled: overlay,
+    });
 
-    // Droppable for items so cross-column drops land even when the column is
-    // empty (no item to hover over). Uses a distinct id from the sortable
-    // column so collision detection can resolve them independently.
+    // Droppable for items so cross-section drops land even when the section is
+    // empty. Uses a distinct id from the sortable section so collision
+    // detection can resolve them independently.
     const { setNodeRef: setItemDropRef } = useDroppable({
         id: `${column.id}:items`,
         data: { type: 'column-droppable', columnId: column.id },
@@ -52,7 +51,7 @@ export function ShowBoardKanbanColumn({
     });
 
     return (
-        <div
+        <section
             ref={overlay ? undefined : setNodeRef}
             style={
                 overlay
@@ -63,14 +62,14 @@ export function ShowBoardKanbanColumn({
                           opacity: isDragging ? 0 : 1,
                       }
             }
-            className="flex w-80 shrink-0 flex-col gap-4 rounded-xl bg-sidebar p-4"
+            className="flex flex-col gap-3"
         >
-            <div className="flex items-center justify-between">
+            <header className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                    <h3 className="font-semibold text-foreground">
+                    <h3 className="text-sm font-medium text-muted-foreground">
                         {column.name}
                     </h3>
-                    <span className="flex size-6 items-center justify-center rounded-full bg-secondary text-xs font-medium text-muted-foreground">
+                    <span className="flex size-5 items-center justify-center rounded-full bg-secondary text-[10px] font-medium text-muted-foreground">
                         {items.length}
                     </span>
                 </div>
@@ -96,16 +95,12 @@ export function ShowBoardKanbanColumn({
                         </Link>
                     </Button>
                 </div>
-            </div>
+            </header>
 
             {overlay ? (
                 <div className="flex min-h-12 flex-col gap-2">
                     {items.map((item) => (
-                        <ShowBoardKanbanCard
-                            key={item.id}
-                            item={item}
-                            overlay
-                        />
+                        <BoardItemsListRow key={item.id} item={item} overlay />
                     ))}
                 </div>
             ) : (
@@ -118,11 +113,11 @@ export function ShowBoardKanbanColumn({
                         className="flex min-h-12 flex-col gap-2"
                     >
                         {items.map((item) => (
-                            <ShowBoardKanbanCard key={item.id} item={item} />
+                            <BoardItemsListRow key={item.id} item={item} />
                         ))}
                     </div>
                 </SortableContext>
             )}
-        </div>
+        </section>
     );
 }

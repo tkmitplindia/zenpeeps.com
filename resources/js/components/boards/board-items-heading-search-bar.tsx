@@ -1,19 +1,19 @@
 import { useForm, usePage } from '@inertiajs/react';
 import { SearchIcon } from 'lucide-react';
-import { show } from '@/routes/boards';
-import type { BoardShowPageProps } from '@/types/board';
+import { index } from '@/routes/boards/items';
+import type { BoardItemsIndexPageProps } from '@/types/board';
 import { Button } from '../ui/button';
 import { Input } from '../ui/input';
 
-export function ShowBoardHeadingSearchBar() {
-    const { board, filters } = usePage<BoardShowPageProps>().props;
+export function BoardItemsHeadingSearchBar() {
+    const { board, filters } = usePage<BoardItemsIndexPageProps>().props;
     const { data, setData, get } = useForm({
         search: filters.search ?? '',
     });
 
     function onSubmit() {
         get(
-            show(
+            index(
                 {
                     current_team: board.team.slug,
                     board: board.id,

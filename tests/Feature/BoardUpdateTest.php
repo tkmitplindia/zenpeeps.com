@@ -33,7 +33,7 @@ test('a board member can archive a board via update', function () {
             'status' => BoardStatus::Archived->value,
             'members' => [$user->id],
         ])
-        ->assertRedirect(route('boards.show', ['current_team' => $team, 'board' => $board]));
+        ->assertRedirect(route('boards.items.index', ['current_team' => $team, 'board' => $board->id]));
 
     expect($board->fresh()->status)->toBe(BoardStatus::Archived);
 });

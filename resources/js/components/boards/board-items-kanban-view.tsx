@@ -9,14 +9,14 @@ import { useId } from 'react';
 import { useBoardDnd } from '@/hooks/use-board-dnd';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { create as createColumn } from '@/routes/boards/columns';
-import type { BoardShowPageProps } from '@/types/board';
+import type { BoardItemsIndexPageProps } from '@/types/board';
 import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
-import { ShowBoardKanbanCard } from './show-kanban-card';
-import { ShowBoardKanbanColumn } from './show-kanban-column';
+import { BoardItemsKanbanCard } from './board-items-kanban-card';
+import { BoardItemsKanbanColumn } from './board-items-kanban-column';
 
-export function ShowBoardKanbanView() {
-    const { board } = usePage<BoardShowPageProps>().props;
+export function BoardItemsKanbanView() {
+    const { board } = usePage<BoardItemsIndexPageProps>().props;
     const currentTeam = useCurrentTeam();
     const dnd = useBoardDnd();
     const dndId = useId();
@@ -38,7 +38,7 @@ export function ShowBoardKanbanView() {
                 <ScrollArea orientation="horizontal" className="min-h-0 flex-1">
                     <div className="flex gap-6 pb-4">
                         {dnd.local.map((c) => (
-                            <ShowBoardKanbanColumn
+                            <BoardItemsKanbanColumn
                                 key={c.id}
                                 column={c.column}
                                 items={c.items}
@@ -69,9 +69,9 @@ export function ShowBoardKanbanView() {
 
             <DragOverlay dropAnimation={null}>
                 {dnd.activeItem ? (
-                    <ShowBoardKanbanCard item={dnd.activeItem} overlay />
+                    <BoardItemsKanbanCard item={dnd.activeItem} overlay />
                 ) : dnd.activeColumn ? (
-                    <ShowBoardKanbanColumn
+                    <BoardItemsKanbanColumn
                         column={dnd.activeColumn.column}
                         items={dnd.activeColumn.items}
                         overlay

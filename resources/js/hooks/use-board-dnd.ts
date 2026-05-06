@@ -16,7 +16,8 @@ import { useMemo, useState } from 'react';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { reorder as reorderColumns } from '@/routes/boards/columns';
 import { reorder as reorderItems } from '@/routes/boards/items';
-import type { BoardColumn, BoardItem, BoardShowPageProps } from '@/types/board';
+import type { BoardColumn, BoardItem, BoardItemsIndexPageProps } from '@/types/board';
+import type { PaginatedResponse } from '@/types/base';
 
 export type BoardDndColumn = {
     id: string;
@@ -33,20 +34,36 @@ type ActiveType =
     | null;
 
 export function useBoardDnd() {
-    const { columns, board } = usePage<BoardShowPageProps>().props;
+    const { columns, items, board } = usePage<BoardItemsIndexPageProps>().props;
     const currentTeam = useCurrentTeam();
 
+    // Build local state from paginated items grouped by column.
+    const buildLocalFromItems = (paginatedItems: PaginatedResponse<BoardItem>): BoardDndColumn[] => {
+        const grouped = new Map<string, BoardItem[]>();
+        paginatedItems.data.forEach((item) => {
+            const existing = grouped.get(item.board_column_id) ?? [];
+            existing.push(item);
+            grouped.set(item.board_column_id, existing);
+        });
+
+        return columns.map((column) => ({
+            id: column.id,
+            column,
+            items: grouped.get(column.id) ?? [],
+        }));
+    };
+
     // Local optimistic state. Server props are the source of truth — re-sync
-    // during render whenever a fresh columns prop arrives so a failed request
+    // during render whenever a fresh items prop arrives so a failed request
     // snaps the UI back to reality.
     const [local, setLocal] = useState<BoardDndColumn[]>(() =>
-        buildLocal(columns),
+        buildLocalFromItems(items),
     );
-    const [columnsSnapshot, setColumnsSnapshot] = useState(columns);
+    const [itemsSnapshot, setItemsSnapshot] = useState(items);
 
-    if (columnsSnapshot !== columns) {
-        setColumnsSnapshot(columns);
-        setLocal(buildLocal(columns));
+    if (itemsSnapshot !== items) {
+        setItemsSnapshot(items);
+        setLocal(buildLocalFromItems(items));
     }
 
     const [activeType, setActiveType] = useState<ActiveType>(null);
@@ -228,7 +245,7 @@ export function useBoardDnd() {
         }
 
         // Persist both source (if it changed) and destination columns.
-        const original = buildLocal(columns);
+        const original = buildLocalFromItems(items);
         const changedColumns = next
             .filter((col, i) => {
                 const before = original[i];
@@ -275,12 +292,4 @@ export function useBoardDnd() {
         onDragEnd,
         onDragCancel,
     };
-}
-
-function buildLocal(columns: BoardColumn[]): BoardDndColumn[] {
-    return columns.map((column) => ({
-        id: column.id,
-        column,
-        items: column.items ?? [],
-    }));
 }

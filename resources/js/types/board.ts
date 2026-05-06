@@ -97,7 +97,7 @@ export type BoardIndexPageProps = {
     view: 'grid' | 'list';
 };
 
-export type BoardShowPageProps = {
+export type BoardItemsIndexPageProps = {
     board: Board;
     members: User[];
     columns: BoardColumn[];
@@ -107,6 +107,7 @@ export type BoardShowPageProps = {
         order: string;
     };
     view: 'grid' | 'list';
+    items: PaginatedResponse<BoardItem>;
 };
 
 export type BoardCreatePageProps = {

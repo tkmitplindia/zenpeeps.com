@@ -52,7 +52,7 @@ test('a column can be created and lands at the end', function () {
     $this->actingAs($user)->post(
         route('boards.columns.store', ['current_team' => $board->team, 'board' => $board]),
         ['name' => 'In Review'],
-    )->assertRedirect(route('boards.show', ['current_team' => $board->team, 'board' => $board]));
+    )->assertRedirect(route('boards.items.index', ['current_team' => $board->team, 'board' => $board->id]));
 
     $created = BoardColumn::where('name', 'In Review')->firstOrFail();
     expect($created->board_id)->toBe($board->id)

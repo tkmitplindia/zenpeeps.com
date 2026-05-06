@@ -33,7 +33,7 @@ test('board members can create an item', function () {
     $column = $board->columns->first();
 
     $response = $this->actingAs($user)->post(
-        route('boards.items.store', ['current_team' => $board->team, 'board' => $board]),
+        route('boards.items.store', ['current_team' => $board->team, 'board' => $board->id]),
         [
             'title' => 'Setup UX Storyboard',
             'description' => 'Collect feedback',
@@ -47,9 +47,9 @@ test('board members can create an item', function () {
 
     $item = BoardItem::firstOrFail();
     $response->assertRedirect(route('boards.items.show', [
-        'current_team' => $board->team,
-        'board' => $board,
-        'item' => $item,
+        'current_team' => $board->team->slug,
+        'board' => $board->id,
+        'item' => $item->id,
     ]));
 
     expect($item->title)->toBe('Setup UX Storyboard')
@@ -68,7 +68,7 @@ test('non-members cannot create items', function () {
     $board->team->members()->attach($stranger, ['role' => TeamRole::Member->value]);
 
     $response = $this->actingAs($stranger)->post(
-        route('boards.items.store', ['current_team' => $board->team, 'board' => $board]),
+        route('boards.items.store', ['current_team' => $board->team, 'board' => $board->id]),
         ['title' => 'X', 'board_column_id' => $board->columns->first()->id],
     );
 
@@ -82,7 +82,7 @@ test('board members can view an item', function () {
 
     $response = $this->actingAs($user)->get(route('boards.items.show', [
         'current_team' => $board->team,
-        'board' => $board,
+        'board' => $board->id,
         'item' => $item,
     ]));
 
@@ -100,7 +100,7 @@ test('updating an item patches only the provided fields', function () {
     $this->actingAs($user)->patch(
         route('boards.items.update', [
             'current_team' => $board->team,
-            'board' => $board,
+            'board' => $board->id,
             'item' => $item,
         ]),
         ['description' => 'Updated description'],
@@ -117,7 +117,7 @@ test('item numbers are unique per board', function () {
 
     foreach (['First', 'Second', 'Third'] as $title) {
         $this->actingAs($user)->post(
-            route('boards.items.store', ['current_team' => $board->team, 'board' => $board]),
+            route('boards.items.store', ['current_team' => $board->team, 'board' => $board->id]),
             ['title' => $title, 'board_column_id' => $column->id],
         );
     }
@@ -193,11 +193,11 @@ test('checklist items appear on the show payload under snake_case key', function
     $this->actingAs($user)
         ->get(route('boards.items.show', [
             'current_team' => $board->team,
-            'board' => $board,
+            'board' => $board->id,
             'item' => $item,
         ]))
         ->assertOk()
-        ->assertInertia(fn ($page) => $page
+        ->assertInertia(fn($page) => $page
             ->component('boards/items/show')
             ->where('item.checklist_items.0.name', 'Conduct market research'));
 });
@@ -232,12 +232,12 @@ test('items appear on the board show page payload', function () {
     $item = BoardItem::factory()->forBoard($board)->create(['title' => 'Visible task']);
 
     $this->actingAs($user)
-        ->get(route('boards.show', ['current_team' => $board->team, 'board' => $board]))
+        ->get(route('boards.items.index', ['current_team' => $board->team, 'board' => $board->id]))
         ->assertOk()
-        ->assertInertia(fn ($page) => $page
-            ->component('boards/show')
-            ->where('columns.0.items.0.id', $item->id)
-            ->where('columns.0.items.0.title', 'Visible task'));
+        ->assertInertia(fn($page) => $page
+            ->component('boards/items/index')
+            ->where('items.data.0.id', $item->id)
+            ->where('items.data.0.title', 'Visible task'));
 });
 
 test('deleting an item removes it', function () {
@@ -247,7 +247,7 @@ test('deleting an item removes it', function () {
 
     $this->actingAs($user)->delete(route('boards.items.destroy', [
         'current_team' => $board->team,
-        'board' => $board,
+        'board' => $board->id,
         'item' => $item,
     ]))->assertRedirect();
 

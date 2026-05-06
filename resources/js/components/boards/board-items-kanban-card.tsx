@@ -1,12 +1,7 @@
 import { useSortable } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
 import { Link } from '@inertiajs/react';
-import {
-    CalendarIcon,
-    FlagIcon,
-    MessageSquareIcon,
-    PaperclipIcon,
-} from 'lucide-react';
+import { CalendarIcon, FlagIcon } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { useInitials } from '@/hooks/use-initials';
@@ -28,7 +23,7 @@ const PRIORITY_CLASS: Record<BoardItemPriority, string> = {
     urgent: 'text-red-600',
 };
 
-export function ShowBoardListRow({
+export function BoardItemsKanbanCard({
     item,
     overlay = false,
 }: {
@@ -39,9 +34,6 @@ export function ShowBoardListRow({
     const initials = useInitials();
     const tags = item.tags ?? [];
     const assignees = item.assignees ?? [];
-    const attachmentsCount = item.attachments?.length ?? 0;
-    const commentsCount = item.comments?.length ?? 0;
-    const primaryAssignee = assignees[0];
 
     const {
         attributes,
@@ -77,36 +69,42 @@ export function ShowBoardListRow({
                               opacity: isDragging ? 0 : 1,
                           }
                 }
-                className="flex touch-none items-center justify-between gap-4 rounded-lg border bg-card px-4 py-3 text-left shadow-sm transition-colors hover:bg-accent active:cursor-grabbing"
+                className="flex touch-none flex-col gap-2 rounded-lg border bg-card p-3 text-left shadow-sm transition-colors hover:bg-accent active:cursor-grabbing"
                 {...(overlay ? {} : attributes)}
                 {...(overlay ? {} : listeners)}
             >
-                <div className="flex min-w-0 flex-1 flex-col gap-1">
-                    <h4 className="truncate text-sm leading-snug font-semibold">
-                        {item.title}
-                    </h4>
-                    {tags.length > 0 && (
-                        <div className="flex flex-wrap items-center gap-2">
-                            {tags.map((t) => (
-                                <span
-                                    key={t.id}
-                                    className="text-xs text-muted-foreground"
-                                >
-                                    # {t.name}
-                                </span>
-                            ))}
-                        </div>
-                    )}
-                </div>
-
-                <div className="flex shrink-0 items-center gap-4 text-xs text-muted-foreground">
+                <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1">
+                        <h4 className="text-sm leading-snug font-medium">
+                            {item.title}
+                        </h4>
+                        <p className="text-xs text-muted-foreground">
+                            Task #{item.number}
+                        </p>
+                    </div>
                     <span
-                        className={`flex items-center gap-1 ${PRIORITY_CLASS[item.priority]}`}
+                        className={`flex items-center gap-1 text-xs ${PRIORITY_CLASS[item.priority]}`}
                     >
                         <FlagIcon className="size-3" />
                         {PRIORITY_LABEL[item.priority]}
                     </span>
-                    {item.due_date && (
+                </div>
+
+                {tags.length > 0 && (
+                    <div className="flex flex-wrap gap-1">
+                        {tags.map((t) => (
+                            <span
+                                key={t.id}
+                                className="rounded bg-secondary px-1.5 py-0.5 text-xs"
+                            >
+                                {t.name}
+                            </span>
+                        ))}
+                    </div>
+                )}
+
+                <div className="flex items-center justify-between gap-2 text-xs text-muted-foreground">
+                    {item.due_date ? (
                         <span className="flex items-center gap-1">
                             <CalendarIcon className="size-3" />
                             {new Date(item.due_date).toLocaleDateString(
@@ -117,33 +115,27 @@ export function ShowBoardListRow({
                                 },
                             )}
                         </span>
+                    ) : (
+                        <span />
                     )}
-                    {attachmentsCount > 0 && (
-                        <span className="flex items-center gap-1">
-                            <PaperclipIcon className="size-3" />
-                            {attachmentsCount}
-                        </span>
-                    )}
-                    {commentsCount > 0 && (
-                        <span className="flex items-center gap-1">
-                            <MessageSquareIcon className="size-3" />
-                            {commentsCount}
-                        </span>
-                    )}
-                    {primaryAssignee && (
-                        <span className="flex items-center gap-1.5">
-                            <Avatar className="size-5">
-                                <AvatarImage
-                                    src={primaryAssignee.avatar}
-                                    alt={primaryAssignee.name}
-                                />
-                                <AvatarFallback className="text-[9px]">
-                                    {initials(primaryAssignee.name)}
+                    <div className="flex -space-x-2">
+                        {assignees.slice(0, 3).map((u) => (
+                            <Avatar
+                                key={u.id}
+                                className="size-6 border-2 border-card"
+                            >
+                                <AvatarImage src={u.avatar} alt={u.name} />
+                                <AvatarFallback className="text-[10px]">
+                                    {initials(u.name)}
                                 </AvatarFallback>
                             </Avatar>
-                            {primaryAssignee.name}
-                        </span>
-                    )}
+                        ))}
+                        {assignees.length > 3 && (
+                            <span className="flex size-6 items-center justify-center rounded-full border-2 border-card bg-secondary text-[10px]">
+                                +{assignees.length - 3}
+                            </span>
+                        )}
+                    </div>
                 </div>
             </Link>
         </BoardItemCardContextMenu>

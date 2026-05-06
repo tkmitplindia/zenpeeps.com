@@ -31,8 +31,7 @@ Route::prefix('{current_team}')
         Route::patch('boards/{board}/items/reorder', [BoardItemController::class, 'reorder'])
             ->name('boards.items.reorder');
         Route::resource('boards.items', BoardItemController::class)
-            ->only(['create', 'store', 'show', 'update', 'destroy'])
-            ->scoped(['item' => 'id']);
+            ->only(['index', 'create', 'store', 'show', 'update', 'destroy']);
 
         Route::resource('boards.items.comments', BoardItemCommentController::class)
             ->only(['store', 'destroy'])
@@ -59,4 +58,4 @@ Route::middleware(['auth'])->group(function () {
     Route::get('invitations/{invitation}/accept', [TeamInvitationController::class, 'accept'])->name('invitations.accept');
 });
 
-require __DIR__.'/settings.php';
+require __DIR__ . '/settings.php';

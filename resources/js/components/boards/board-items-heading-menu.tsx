@@ -6,7 +6,7 @@ import {
     PlusIcon,
     TrashIcon,
 } from 'lucide-react';
-import type { BoardShowPageProps } from '@/types/board';
+import type { BoardItemsIndexPageProps } from '@/types/board';
 import { Button } from '../ui/button';
 import {
     DropdownMenu,
@@ -18,8 +18,8 @@ import {
 } from '../ui/dropdown-menu';
 import { useBoardDialog } from './board-delete-dialog-provider';
 
-export function BoardShowHeadingMenu() {
-    const { board } = usePage<BoardShowPageProps>().props;
+export function BoardItemsHeadingMenu() {
+    const { board } = usePage<BoardItemsIndexPageProps>().props;
     const { confirmDelete } = useBoardDialog();
 
     return (

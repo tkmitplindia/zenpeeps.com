@@ -1,12 +1,12 @@
 import { Link, usePage } from '@inertiajs/react';
 import { LayoutGridIcon, ListIcon } from 'lucide-react';
-import { show } from '@/routes/boards';
-import type { BoardShowPageProps } from '@/types/board';
+import { index } from '@/routes/boards/items';
+import type { BoardItemsIndexPageProps } from '@/types/board';
 import { Button } from '../ui/button';
 import { ButtonGroup } from '../ui/button-group';
 
-export function ShowBoardHeadingViewSwitcher() {
-    const { board, view, filters } = usePage<BoardShowPageProps>().props;
+export function BoardItemsHeadingViewSwitcher() {
+    const { board, view, filters } = usePage<BoardItemsIndexPageProps>().props;
 
     return (
         <ButtonGroup>
@@ -17,7 +17,7 @@ export function ShowBoardHeadingViewSwitcher() {
             >
                 <Link
                     href={
-                        show(
+                        index(
                             {
                                 current_team: board.team.slug,
                                 board: board.id,
@@ -41,7 +41,7 @@ export function ShowBoardHeadingViewSwitcher() {
             >
                 <Link
                     href={
-                        show(
+                        index(
                             {
                                 current_team: board.team.slug,
                                 board: board.id,

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Actions\BoardItems\DestroyBoardItemAction;
+use App\Actions\BoardItems\IndexBoardItemsAction;
 use App\Actions\BoardItems\ReorderBoardItemsAction;
 use App\Actions\BoardItems\ShowBoardItemAction;
 use App\Actions\BoardItems\StoreBoardItemAction;
@@ -19,6 +20,39 @@ use App\Models\Team;
 
 class BoardItemController extends Controller
 {
+    public function index(Team $current_team, Board $board, IndexBoardItemsAction $indexBoardItemsAction)
+    {
+        $user = request()->user();
+
+        if ($user->cannot('view', $board)) {
+            abort(403);
+        }
+
+        $board->load('team');
+
+        $search = request('search');
+        $sort = request('sort', 'position');
+        $order = request('order', 'asc');
+        $view = request('view', 'grid');
+        $limit = request('limit', 15);
+
+        $items = $indexBoardItemsAction->execute($board, $search, $sort, $order, $view, $limit);
+
+
+        return inertia('boards/items/index', [
+            'board' => $board,
+            'members' => $board->members,
+            'columns' => $board->columns()->orderBy('order')->get(),
+            'filters' => [
+                'search' => $search,
+                'sort' => $sort,
+                'order' => $order,
+            ],
+            'view' => $view,
+            'items' => $items,
+        ]);
+    }
+
     public function create(Team $current_team, Board $board)
     {
         $user = request()->user();
@@ -60,7 +94,7 @@ class BoardItemController extends Controller
 
         return to_route('boards.items.show', [
             'current_team' => $current_team,
-            'board' => $board,
+            'board' => $board->id,
             'item' => $item,
         ]);
     }
@@ -119,9 +153,9 @@ class BoardItemController extends Controller
 
         $destroyBoardItemAction->execute($item);
 
-        return to_route('boards.show', [
+        return to_route('boards.items.index', [
             'current_team' => $current_team,
-            'board' => $board,
+            'board' => $board->id,
         ]);
     }
 }

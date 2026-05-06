@@ -1,31 +1,31 @@
 import { usePage } from '@inertiajs/react';
 import { BoardDeleteDialogProvider } from '@/components/boards/board-delete-dialog-provider';
 import { BoardItemDeleteDialogProvider } from '@/components/boards/items/board-item-delete-dialog-provider';
-import { ShowBoardHeading } from '@/components/boards/show-heading';
-import { ShowBoardKanbanView } from '@/components/boards/show-kanban-view';
-import { ShowBoardListView } from '@/components/boards/show-list-view';
-import { index, show } from '@/routes/boards';
+import { BoardItemsHeading } from '@/components/boards/board-items-heading';
+import { BoardItemsKanbanView } from '@/components/boards/board-items-kanban-view';
+import { BoardItemsListView } from '@/components/boards/board-items-list-view';
+import { index } from '@/routes/boards';
 import type { Team } from '@/types';
-import type { Board, BoardShowPageProps } from '@/types/board';
+import type { Board, BoardItemsIndexPageProps } from '@/types/board';
 
-export default function ShowBoardPage() {
-    const { view } = usePage<BoardShowPageProps>().props;
+export default function BoardItemsIndexPage() {
+    const { board, view } = usePage<BoardItemsIndexPageProps>().props;
 
     return (
         <BoardDeleteDialogProvider>
             <BoardItemDeleteDialogProvider>
                 <div className="flex h-full flex-col gap-8 p-8">
-                    <ShowBoardHeading />
+                    <BoardItemsHeading />
 
-                    {view === 'grid' && <ShowBoardKanbanView />}
-                    {view === 'list' && <ShowBoardListView />}
+                    {view === 'grid' && <BoardItemsKanbanView />}
+                    {view === 'list' && <BoardItemsListView />}
                 </div>
             </BoardItemDeleteDialogProvider>
         </BoardDeleteDialogProvider>
     );
 }
 
-ShowBoardPage.layout = (props: { currentTeam: Team; board: Board }) => ({
+BoardItemsIndexPage.layout = (props: { currentTeam: Team; board: Board }) => ({
     breadcrumbs: [
         {
             title: 'Boards',
@@ -33,9 +33,8 @@ ShowBoardPage.layout = (props: { currentTeam: Team; board: Board }) => ({
         },
         {
             title: props.board.name,
-            href: show({
+            href: index({
                 current_team: props.currentTeam.slug,
-                board: props.board.id,
             }).url,
         },
     ],

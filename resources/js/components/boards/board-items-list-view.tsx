@@ -9,14 +9,14 @@ import { useId } from 'react';
 import { useBoardDnd } from '@/hooks/use-board-dnd';
 import { useCurrentTeam } from '@/hooks/use-current-team';
 import { create as createColumn } from '@/routes/boards/columns';
-import type { BoardShowPageProps } from '@/types/board';
+import type { BoardItemsIndexPageProps } from '@/types/board';
 import { Button } from '../ui/button';
 import { ScrollArea } from '../ui/scroll-area';
-import { ShowBoardListRow } from './show-list-row';
-import { ShowBoardListSection } from './show-list-section';
+import { BoardItemsListRow } from './board-items-list-row';
+import { BoardItemsListSection } from './board-items-list-section';
 
-export function ShowBoardListView() {
-    const { board } = usePage<BoardShowPageProps>().props;
+export function BoardItemsListView() {
+    const { board } = usePage<BoardItemsIndexPageProps>().props;
     const currentTeam = useCurrentTeam();
     const dnd = useBoardDnd();
     const dndId = useId();
@@ -38,7 +38,7 @@ export function ShowBoardListView() {
                 <ScrollArea className="min-h-0 flex-1">
                     <div className="flex flex-col gap-8 pr-4 pb-4">
                         {dnd.local.map((c) => (
-                            <ShowBoardListSection
+                            <BoardItemsListSection
                                 key={c.id}
                                 column={c.column}
                                 items={c.items}
@@ -64,9 +64,9 @@ export function ShowBoardListView() {
 
             <DragOverlay dropAnimation={null}>
                 {dnd.activeItem ? (
-                    <ShowBoardListRow item={dnd.activeItem} overlay />
+                    <BoardItemsListRow item={dnd.activeItem} overlay />
                 ) : dnd.activeColumn ? (
-                    <ShowBoardListSection
+                    <BoardItemsListSection
                         column={dnd.activeColumn.column}
                         items={dnd.activeColumn.items}
                         overlay

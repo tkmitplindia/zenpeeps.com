@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Actions\Boards\DestroyBoardAction;
 use App\Actions\Boards\IndexBoardAction;
-use App\Actions\Boards\ShowBoardAction;
 use App\Actions\Boards\StoreBoardAction;
 use App\Actions\Boards\UpdateBoardAction;
 use App\Enums\BoardStatus;
@@ -97,35 +96,20 @@ class BoardController extends Controller
             $user
         );
 
-        return to_route('boards.show', $board);
+        return to_route('boards.items.index', [
+            'current_team' => $current_team,
+            'board' => $board->id,
+        ]);
     }
 
     /**
-     * Display the specified resource.
+     * Show the form for editing the specified resource.
      */
-    public function show(Team $current_team, Board $board, ShowBoardAction $showBoardAction)
+    public function show(Team $current_team, Board $board)
     {
-        if (request()->user()->cannot('view', $board)) {
-            abort(403);
-        }
-
-        $search = request('search');
-        $sort = request('sort', 'name');
-        $order = request('order', 'asc');
-        $view = request('view', 'grid');
-
-        $board = $showBoardAction->execute($board);
-
-        return inertia('boards/show', [
-            'board' => $board,
-            'members' => $board->members,
-            'columns' => $board->columns,
-            'filters' => [
-                'search' => $search,
-                'sort' => $sort,
-                'order' => $order,
-            ],
-            'view' => $view,
+        return to_route('boards.items.index', [
+            'current_team' => $board->team,
+            'board' => $board->id,
         ]);
     }
 
@@ -164,9 +148,9 @@ class BoardController extends Controller
             $members
         );
 
-        return to_route('boards.show', [
+        return to_route('boards.items.index', [
             'current_team' => $current_team,
-            'board' => $board,
+            'board' => $board->id,
         ]);
     }
 

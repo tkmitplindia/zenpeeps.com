@@ -4,8 +4,8 @@ import {
     ArrowUpNarrowWideIcon,
     ChevronDownIcon,
 } from 'lucide-react';
-import { show } from '@/routes/boards';
-import type { BoardShowPageProps } from '@/types/board';
+import { index } from '@/routes/boards/items';
+import type { BoardItemsIndexPageProps } from '@/types/board';
 import { Button } from '../ui/button';
 import {
     DropdownMenu,
@@ -14,8 +14,8 @@ import {
     DropdownMenuTrigger,
 } from '../ui/dropdown-menu';
 
-export function ShowBoardHeadingSort() {
-    const { board, filters } = usePage<BoardShowPageProps>().props;
+export function BoardItemsHeadingSort() {
+    const { board, filters } = usePage<BoardItemsIndexPageProps>().props;
     const { sort, order } = filters;
 
     function renderDropdownLabel() {
@@ -60,7 +60,7 @@ export function ShowBoardHeadingSort() {
                 <DropdownMenuItem asChild>
                     <Link
                         href={
-                            show(
+                            index(
                                 {
                                     current_team: board.team.slug,
                                     board: board.id,
@@ -86,7 +86,7 @@ export function ShowBoardHeadingSort() {
                 <DropdownMenuItem asChild>
                     <Link
                         href={
-                            show(
+                            index(
                                 {
                                     current_team: board.team.slug,
                                     board: board.id,
@@ -112,7 +112,7 @@ export function ShowBoardHeadingSort() {
                 <DropdownMenuItem asChild>
                     <Link
                         href={
-                            show(
+                            index(
                                 {
                                     current_team: board.team.slug,
                                     board: board.id,

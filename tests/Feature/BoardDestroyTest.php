@@ -34,7 +34,7 @@ test('the board destroy request fails validation when the name does not match', 
     [$user, $team, $board] = setUpBoardForDestroy();
 
     $this->actingAs($user)
-        ->from(route('boards.show', ['current_team' => $team, 'board' => $board]))
+        ->from(route('boards.items.index', ['current_team' => $team, 'board' => $board->id]))
         ->delete(route('boards.destroy', ['current_team' => $team, 'board' => $board]), [
             'name' => 'wrong name',
         ])
@@ -47,7 +47,7 @@ test('the board destroy request fails validation when the name is missing', func
     [$user, $team, $board] = setUpBoardForDestroy();
 
     $this->actingAs($user)
-        ->from(route('boards.show', ['current_team' => $team, 'board' => $board]))
+        ->from(route('boards.items.index', ['current_team' => $team, 'board' => $board->id]))
         ->delete(route('boards.destroy', ['current_team' => $team, 'board' => $board]))
         ->assertSessionHasErrors('name');
 

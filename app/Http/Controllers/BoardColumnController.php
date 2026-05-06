@@ -40,9 +40,9 @@ class BoardColumnController extends Controller
     ) {
         $storeBoardColumnAction->execute($board, $request->validated('name'));
 
-        return to_route('boards.show', [
+        return to_route('boards.items.index', [
             'current_team' => $current_team,
-            'board' => $board,
+            'board' => $board->id,
         ]);
     }
 
@@ -55,7 +55,10 @@ class BoardColumnController extends Controller
 
         $updateBoardColumnAction->execute($boardColumn, $name);
 
-        return to_route('boards.show', $boardColumn->board);
+        return to_route('boards.items.index', [
+            'current_team' => $boardColumn->board->team,
+            'board' => $boardColumn->board->id,
+        ]);
     }
 
     /**
@@ -83,6 +86,9 @@ class BoardColumnController extends Controller
 
         $destroyBoardColumnAction->execute($boardColumn);
 
-        return to_route('boards.show', $boardColumn->board);
+        return to_route('boards.items.index', [
+            'current_team' => $boardColumn->board->team,
+            'board' => $boardColumn->board->id,
+        ]);
     }
 }
